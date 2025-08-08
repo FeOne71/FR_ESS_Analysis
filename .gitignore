@@ -1,5 +1,3 @@
 *.mat
 *.fig
 *.csv
-!Experiment_DriveCycle_Fitting/
-!FieldData/
