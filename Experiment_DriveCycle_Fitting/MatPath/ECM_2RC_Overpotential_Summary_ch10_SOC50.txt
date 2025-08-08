@@ -1,0 +1,5 @@
+ECM 2RC Terminal Voltage Modeling Results - 18-Jul-2025 17:14:00
+
+DC1: R0=0.6 mΩ, R1=0.6 mΩ, R2=7.4 mΩ, τ1=45.2 s, τ2=3371.7 s
+  RMSE: 1.676 mV, Time: 18.6 s
+

@@ -1,0 +1,26 @@
+ECM 2RC Terminal Voltage Modeling Results - 14-Jul-2025 17:36:29
+
+DC1: R0=0.6 mΩ, R1=0.5 mΩ, R2=1.5 mΩ, τ1=36.3 s, τ2=1606.4 s
+  RMSE: 0.816 mV, Time: 3.5 s
+
+DC2: R0=0.6 mΩ, R1=0.8 mΩ, R2=1.8 mΩ, τ1=60.0 s, τ2=1619.7 s
+  RMSE: 1.033 mV, Time: 3.7 s
+
+DC3: R0=0.6 mΩ, R1=0.4 mΩ, R2=0.5 mΩ, τ1=23.7 s, τ2=338.6 s
+  RMSE: 0.857 mV, Time: 42.3 s
+
+DC4: R0=0.6 mΩ, R1=0.4 mΩ, R2=0.5 mΩ, τ1=19.1 s, τ2=358.2 s
+  RMSE: 0.858 mV, Time: 3.5 s
+
+DC5: R0=0.6 mΩ, R1=0.3 mΩ, R2=0.4 mΩ, τ1=17.9 s, τ2=146.1 s
+  RMSE: 0.252 mV, Time: 1.7 s
+
+DC6: R0=0.6 mΩ, R1=0.4 mΩ, R2=0.5 mΩ, τ1=23.2 s, τ2=336.1 s
+  RMSE: 0.260 mV, Time: 27.5 s
+
+DC7: R0=0.6 mΩ, R1=0.4 mΩ, R2=0.6 mΩ, τ1=22.5 s, τ2=229.2 s
+  RMSE: 0.274 mV, Time: 27.5 s
+
+DC8: R0=0.6 mΩ, R1=0.4 mΩ, R2=0.7 mΩ, τ1=21.6 s, τ2=256.3 s
+  RMSE: 0.336 mV, Time: 58.7 s
+

@@ -1,5 +1,5 @@
+!Experiment_DriveCycle_Fitting/**
+!FieldData/**
+!README.md
 !.gitignore
-*
-!Experiment_DriveCycle_Fitting/
-!FieldData/
 FieldData/FieldData_Rack_DCIR/Reference/
