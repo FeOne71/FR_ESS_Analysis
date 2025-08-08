@@ -1,7 +1,7 @@
 *
-!FieldData/
-!Experiment_DriveCycle_Fitting/
-!Experimental Data/
+!FieldData/**
+!Experiment_DriveCycle_Fitting/**
+!ExperimentalData/**
 *.mat
 *.fig
 *.csv
