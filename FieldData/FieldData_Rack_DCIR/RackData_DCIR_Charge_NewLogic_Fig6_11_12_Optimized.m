@@ -8,9 +8,9 @@
 clc; clear; close all;
 
 %% Directory (NewLogic4_5와 동일한 dataDir 사용)
-dataDir = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\Rack_raw2mat\New\2025';
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\New\2025';
 yearList = {'2025'};
-saveDir = fullfile('G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_NewLogic_Fig6_11_12');
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_NewLogic_Fig6_11_12');
 %% 
 if ~exist(saveDir, 'dir')
     mkdir(saveDir);
