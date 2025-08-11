@@ -1,15 +1,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Rack Data DCIR Charge - New Logic (idle -> charging) - 2025 Data
+% Rack Data DCIR Charge - New Logic (idle -> charging) - 2023 Data
 % Peak detection: NewLogic (idle -> charging)
 % 1초 샘플링 데이터, 새로운 피크 검출 로직 적용
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clc; clear; close all;
 
-%% Directory (2025년도 데이터 경로)
-dataDir  = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\Rack_raw2mat\New';
-yearList = {'2023'};
-saveDir  = fullfile('G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_2025_NewLogic');
+%% Directory
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\New';
+yearList = {'2023'}; %% Find -> Replace 할것
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_2023_NewLogic');
+
 if ~exist(saveDir, 'dir')
     mkdir(saveDir);
 end
@@ -77,7 +78,7 @@ for year_idx = 1:length(yearList)
             daily_original_data = {};  % 원본 데이터 저장용
             daily_total_peaks = 0;
 
-                         % 2025년도 데이터는 단일 Raw 구조체 (Rack 구조 없음)
+                         % 2023년도 데이터는 단일 Raw 구조체 (Rack 구조 없음)
              fprintf('Data length: %d points\n', length(Raw.Date_Time_seconds));
              t = Raw.Date_Time_seconds;
              I = Raw.DCCurrent;
@@ -180,7 +181,7 @@ for year_idx = 1:length(yearList)
                 DV = (PeakVoltage{i}(end) - PeakVoltage{i}(1));
                 DI = PeakCurrent{i}(end) - PeakCurrent{i}(1);
 
-                if DI > 0 && PeakCurrent{i}(end) > 0
+                if DI > 0 && PeakCurrent{i}(end) > 0 && DV > 0
                     dcir_val = (DV / DI) * 1000;
                     all_dcir_values = [all_dcir_values; dcir_val];  % DCIR 값 수집
                 else
@@ -194,7 +195,7 @@ for year_idx = 1:length(yearList)
                 date_str = matFiles(f).name(5:12);  % Extract YYYYMMDD from Raw_YYYYMMDD.mat
                 formatted_date = sprintf('%s-%s-%s', date_str(1:4), date_str(5:6), date_str(7:8));
 
-                eventStruct.(evtName).rack_name = 'Rack01';  % Default rack name for 2025
+                eventStruct.(evtName).rack_name = 'Rack01';  % Default rack name for 2023
                 eventStruct.(evtName).year = year;
                 eventStruct.(evtName).date = formatted_date;
                 eventStruct.(evtName).start_idx = find(t >= PeakTime{i}(1), 1);
@@ -204,13 +205,14 @@ for year_idx = 1:length(yearList)
                 eventStruct.(evtName).t_seq = Raw.Date_Time_seconds(eventStruct.(evtName).start_idx:eventStruct.(evtName).end_idx);
                 eventStruct.(evtName).I_seq = PeakCurrent{i};
                 eventStruct.(evtName).V_seq = PeakVoltage{i};
-                eventStruct.(evtName).DCIR_Onori = dcir_val;
-                eventStruct.(evtName).DCIR_Onori_DV = DV;
-                eventStruct.(evtName).DCIR_Onori_DI = DI;
-                eventStruct.(evtName).DCIR_Onori_V1 = PeakVoltage{i}(1);
-                eventStruct.(evtName).DCIR_Onori_V2 = PeakVoltage{i}(end);
-                eventStruct.(evtName).DCIR_Onori_I1 = PeakCurrent{i}(1);
-                eventStruct.(evtName).DCIR_Onori_I2 = PeakCurrent{i}(end);
+                eventStruct.(evtName).T_seq = T_batt(eventStruct.(evtName).start_idx:eventStruct.(evtName).end_idx);
+                eventStruct.(evtName).PeakChgR = dcir_val;
+                eventStruct.(evtName).PeakChgR_DV = DV;
+                eventStruct.(evtName).PeakChgR_DI = DI;
+                eventStruct.(evtName).PeakChgR_V1 = PeakVoltage{i}(1);
+                eventStruct.(evtName).PeakChgR_V2 = PeakVoltage{i}(end);
+                eventStruct.(evtName).PeakChgR_I1 = PeakCurrent{i}(1);
+                eventStruct.(evtName).PeakChgR_I2 = PeakCurrent{i}(end);
             end
         end
 
@@ -230,7 +232,7 @@ for year_idx = 1:length(yearList)
     end
 end
 
-% Save structure (by year/date) - 2025년도는 단일 데이터
+% Save structure (by year/date) - 2023년도는 단일 데이터
 eventNames = fieldnames(eventStruct);
 if ~isempty(eventNames)
     % Initialize year structure if not exists
@@ -292,10 +294,10 @@ if ~isempty(all_dcir_values)
         % 중앙값선 추가
         xline(median_dcir, 'g--', 'LineWidth', 2, 'DisplayName', sprintf('Median: %.2f mΩ', median_dcir));
 
-        xlabel('DCIR [mΩ]', 'interpreter', 'tex');
+        xlabel('Resistance [mΩ]', 'interpreter', 'tex');
         xlim([0 1]);
         ylabel('Frequency', 'interpreter', 'tex');
-        title('DCIR Distribution - 2025 Data', 'FontSize', 14);
+        title('Peak_{Chg} R Distribution 2023', 'FontSize', 14);
         legend('Location', 'best');
         set(gca, 'fontsize', Fontsize);
         set(gca, 'ticklabelinterpreter', 'tex');
@@ -316,7 +318,7 @@ if ~isempty(all_dcir_values)
             'BackgroundColor', 'white', 'EdgeColor', 'black');
 
         % 히스토그램 저장
-        hist_filename = fullfile(saveDir, 'DCIR_Histogram_NewLogic_2025.fig');
+        hist_filename = fullfile(saveDir, 'DCIR_Histogram_NewLogic_2023.fig');
         saveas(gcf, hist_filename);
         fprintf('DCIR Histogram saved to: %s\n', hist_filename);
 
@@ -413,7 +415,7 @@ if ~isempty(all_peak_times)
     ylabel('Voltage [V]', 'interpreter', 'tex');
     set(gca, 'fontsize', Fontsize);
     set(gca, 'ticklabelinterpreter', 'tex');
-    title('Voltage Data with Detected Peaks (New Logic) - 2025 Data');
+    title('Voltage Data with Detected Peaks (New Logic) - 2023 Data');
 
     % Current subplot
     subplot(2,1,2);
@@ -448,14 +450,14 @@ if ~isempty(all_peak_times)
     ylabel('Current [A]', 'interpreter', 'tex');
     set(gca, 'fontsize', Fontsize);
     set(gca, 'ticklabelinterpreter', 'tex');
-    title('Current Data with Detected Peaks (New Logic) - 2025 Data');
+    title('Current Data with Detected Peaks (New Logic) - 2023 Data');
 
     % Calculate peaks for the selected day
     peaks_for_day = length(PeakTime);
 
-    sgtitle(sprintf('Date: %s, Peaks: %d - 2025 Data', formatted_date, peaks_for_day), 'FontSize', 16);
+    sgtitle(sprintf('Date: %s, Peaks: %d - 2023 Data', formatted_date, peaks_for_day), 'FontSize', 16);
 
-    fig_filename = fullfile(saveDir, 'Onori_Method_NewLogic_Visualization_2025.fig');
+    fig_filename = fullfile(saveDir, 'Onori_Method_NewLogic_Visualization_2023.fig');
     saveas(gcf, fig_filename);
     fprintf('Figure saved to: %s\n', fig_filename);
 
@@ -464,6 +466,6 @@ else
     fprintf('No peaks detected.\n');
 end
 
-save(fullfile(saveDir, 'all_chg_events_onori_newlogic_all_years_2025.mat'), 'global_eventStruct');
+save(fullfile(saveDir, 'all_chg_events_onori_newlogic_all_years_2023.mat'), 'global_eventStruct');
 fprintf('Processing complete!\n');
 fprintf('Results saved to: %s\n', saveDir);

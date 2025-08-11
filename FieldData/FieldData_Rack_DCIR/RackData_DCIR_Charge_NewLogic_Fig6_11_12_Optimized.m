@@ -7,10 +7,10 @@
 
 clc; clear; close all;
 
-%% Directory (NewLogic4_5와 동일한 dataDir 사용)
+%% Directory 
 dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\New\2025';
 yearList = {'2025'};
-saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_NewLogic_Fig6_11_12');
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_NewLogic_Optimized_Fig6_11_12');
 %% 
 if ~exist(saveDir, 'dir')
     mkdir(saveDir);
@@ -29,7 +29,6 @@ max_I_std = C_nom_cell * 0.01;   % Max current standard deviation [A] 1.28A
 Ts = 1.0;  % 1초 간격 데이터
 
 %% Initialize optimized data structures
-% 사전 할당으로 메모리 효율성 향상
 max_events = 10000;  % 예상 최대 이벤트 수
 max_points_per_event = 100000;  % 예상 최대 포인트 수
 

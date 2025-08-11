@@ -7,8 +7,9 @@
 clc; clear; close all;
 
 %% Directory
-dataDir = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\Rack_raw2mat\New\2025';
-saveDir = fullfile('G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_Onori_Fig4_5');
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\New\2023';
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_Onori_Fig4_5');
+
 if ~exist(saveDir, 'dir')
     mkdir(saveDir);
 end
@@ -16,7 +17,7 @@ end
 %% Parameters
 C_nom_cell = 128;
 dt = 5;                   % Current monotonic increase interval
-thr = C_nom_cell * 0.05;  % Initial current threshold (A)
+thr = C_nom_cell * 0.01;  % Initial current threshold (A)
 dI =  C_nom_cell * 0.2;    % Current change threshold after 5s (A)
 ddI = 1;                  % Continuous current increase threshold (A)
 

@@ -7,9 +7,10 @@
 clc; clear; close all;
 
 %% Directory
-dataDir  = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\Rack_raw2mat';
-yearList = {'2022'}; %, '2022', '2023'}; 
-saveDir  = fullfile('G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_Onori_NewLogic');
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat';
+yearList = {'2022'};
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_Onori_NewLogic');
+
 if ~exist(saveDir, 'dir')
     mkdir(saveDir); 
 end
@@ -49,16 +50,23 @@ for year_idx = 1:length(yearList)
     fprintf('Processing year: %s\n', year);
     eventStruct = struct();
     eventCount = 0;
-    yearPath = fullfile(dataDir, year);
-    monthDirs = dir(fullfile(yearPath, '20*'));
-    for m = 1:length(monthDirs)
-        if ~monthDirs(m).isdir, continue; end
-        monthPath = fullfile(yearPath, monthDirs(m).name);
-        matFiles = dir(fullfile(monthPath, 'Raw_*.mat'));
-        for f = 1:length(matFiles)
-            matFilePath = fullfile(monthPath, matFiles(f).name);
-            load(matFilePath); 
-            rackNames = rackNames_all;
+         yearPath = fullfile(dataDir, year);
+     fprintf('Year path: %s\n', yearPath);
+     fprintf('Year path exists: %d\n', exist(yearPath, 'dir'));
+     monthDirs = dir(fullfile(yearPath, '20*'));
+     fprintf('Found %d month directories\n', length(monthDirs));
+     for m = 1:length(monthDirs)
+             if ~monthDirs(m).isdir, continue; end
+             monthPath = fullfile(yearPath, monthDirs(m).name);
+             fprintf('Processing month: %s\n', monthDirs(m).name);
+             matFiles = dir(fullfile(monthPath, '*.mat'));
+             fprintf('Found %d mat files in %s\n', length(matFiles), monthDirs(m).name);
+             for f = 1:length(matFiles)
+                         matFilePath = fullfile(monthPath, matFiles(f).name);
+                           fprintf('Loading file: %s\n', matFiles(f).name);
+              load(matFilePath);
+              fprintf('Raw_Rack structure fields: %s\n', strjoin(fieldnames(Raw_Rack), ', '));
+              rackNames = rackNames_all;
             
             % Initialize daily peak tracking for this file
             daily_peak_times = {};
@@ -189,7 +197,7 @@ for year_idx = 1:length(yearList)
                     DV = (PeakVoltage{i}(end) - PeakVoltage{i}(1));
                     DI = PeakCurrent{i}(end) - PeakCurrent{i}(1);
                     
-                    if DI > 0 && PeakCurrent{i}(end) > 0
+                    if DI > 0 && PeakCurrent{i}(end) > 0 && DV > 0
                         dcir_val = (DV / DI) * 1000;
                         all_dcir_values = [all_dcir_values; dcir_val];  % DCIR 값 수집
                     else
@@ -213,13 +221,13 @@ for year_idx = 1:length(yearList)
                     eventStruct.(evtName).t_seq = rackData.Time(eventStruct.(evtName).start_idx:eventStruct.(evtName).end_idx);
                     eventStruct.(evtName).I_seq = PeakCurrent{i};
                     eventStruct.(evtName).V_seq = PeakVoltage{i};
-                    eventStruct.(evtName).DCIR_Onori = dcir_val;
-                    eventStruct.(evtName).DCIR_Onori_DV = DV;
-                    eventStruct.(evtName).DCIR_Onori_DI = DI;
-                    eventStruct.(evtName).DCIR_Onori_V1 = PeakVoltage{i}(1);
-                    eventStruct.(evtName).DCIR_Onori_V2 = PeakVoltage{i}(end);
-                    eventStruct.(evtName).DCIR_Onori_I1 = PeakCurrent{i}(1);
-                    eventStruct.(evtName).DCIR_Onori_I2 = PeakCurrent{i}(end);
+                    eventStruct.(evtName).PeakChgR = dcir_val;
+                    eventStruct.(evtName).PeakChgR_DV = DV;
+                    eventStruct.(evtName).PeakChgR_DI = DI;
+                    eventStruct.(evtName).PeakChgR_V1 = PeakVoltage{i}(1);
+                    eventStruct.(evtName).PeakChgR_V2 = PeakVoltage{i}(end);
+                    eventStruct.(evtName).PeakChgR_I1 = PeakCurrent{i}(1);
+                    eventStruct.(evtName).PeakChgR_I2 = PeakCurrent{i}(end);
                 end
             end
             
@@ -288,6 +296,7 @@ for year_idx = 1:length(yearList)
     end
 end
 
+
 %% DCIR Histogram
 if ~isempty(all_dcir_values)
     % 유효한 DCIR 값만 필터링 (NaN 제거)
@@ -313,10 +322,10 @@ if ~isempty(all_dcir_values)
         % 중앙값선 추가
         xline(median_dcir, 'g--', 'LineWidth', 2, 'DisplayName', sprintf('Median: %.2f mΩ', median_dcir));
         
-        xlabel('DCIR [mΩ]', 'interpreter', 'tex');
-        xlim([0 inf]);
+        xlabel('Resistance [mΩ]', 'interpreter', 'tex');
+        xlim([0 1]);
         ylabel('Frequency', 'interpreter', 'tex');
-        title('DCIR Distribution', 'FontSize', 14);
+        title('Peak_{Chg} R Distribution 2022', 'FontSize', 14);
         legend('Location', 'best');
         set(gca, 'fontsize', Fontsize);
         set(gca, 'ticklabelinterpreter', 'tex');
@@ -337,7 +346,7 @@ if ~isempty(all_dcir_values)
             'BackgroundColor', 'white', 'EdgeColor', 'black');
         
         % 히스토그램 저장
-        hist_filename = fullfile(saveDir, 'DCIR_Histogram_NewLogic.fig');
+        hist_filename = fullfile(saveDir, 'DCIR_Histogram_NewLogic_2022.fig');
         saveas(gcf, hist_filename);
         fprintf('DCIR Histogram saved to: %s\n', hist_filename);
         
@@ -406,7 +415,7 @@ if ~isempty(all_peak_times)
     ylabel('Voltage [V]', 'interpreter', 'tex');
     set(gca, 'fontsize', Fontsize);
     set(gca, 'ticklabelinterpreter', 'tex');
-    title('Rack01 Voltage Data with Detected Peaks (New Logic)');
+    title('Rack01 Voltage Data with Detected Peaks');
     
     % Current subplot
     subplot(2,1,2);
@@ -430,12 +439,12 @@ if ~isempty(all_peak_times)
     ylabel('Current [A]', 'interpreter', 'tex');
     set(gca, 'fontsize', Fontsize);
     set(gca, 'ticklabelinterpreter', 'tex');
-    title('Rack01 Current Data with Detected Peaks (New Logic)');
+    title('Rack01 Current Data with Detected Peaks');
     
     % Calculate rack01 peaks for the selected day
     rack01_peaks_for_day = length(PeakTime);
     
-    sgtitle(sprintf('Date: %s, Peaks: %d', formatted_date, rack01_peaks_for_day), 'FontSize', 16);
+    sgtitle(sprintf('Date: %s, Peaks: %d 2022 Data', formatted_date, rack01_peaks_for_day), 'FontSize', 16);
     
     fig_filename = fullfile(saveDir, 'Onori_Method_NewLogic_Visualization.fig');
     saveas(gcf, fig_filename);
@@ -446,6 +455,6 @@ else
     fprintf('No peaks detected.\n');
 end
 
-save(fullfile(saveDir, 'all_chg_events_onori_newlogic_all_years.mat'), 'global_eventStruct');
-fprintf('Processing complete!\n');
+save(fullfile(saveDir, 'all_chg_events_onori_newlogic_all_years_OldData.mat'), 'global_eventStruct');
+fprintf('Processing complete\n');
 fprintf('Results saved to: %s\n', saveDir); 
