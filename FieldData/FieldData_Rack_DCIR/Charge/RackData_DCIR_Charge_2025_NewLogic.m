@@ -9,7 +9,7 @@ clc; clear; close all;
 %% Directory
 dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\New';
 yearList = {'2023'}; %% Find -> Replace 할것
-saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_2023_NewLogic');
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\Charge\DCIR_Charge_2023_NewLogic');
 
 if ~exist(saveDir, 'dir')
     mkdir(saveDir);
