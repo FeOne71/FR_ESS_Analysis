@@ -17,7 +17,7 @@ end
 
 %% Parameters
 C_nom_cell = 128;
-thr = C_nom_cell * 0.01;   % Initial current threshold (A)
+thr = C_nom_cell * 0.1;   % Initial current threshold (A)
 dI  = C_nom_cell * 0.2;    % Current change threshold (A)
 ddI = 1;                   % Continuous current increase threshold (A)
 
