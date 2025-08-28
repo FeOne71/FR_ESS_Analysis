@@ -9,14 +9,14 @@ clc; clear; close all;
 %% Directory
 dataDir  = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat';
 yearList = {'2021', '2022', '2023'}; 
-saveDir  = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\Charge\AutoResults_Charge');
+saveDir  = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\AutoResults_Charge');
 if ~exist(saveDir, 'dir')
     mkdir(saveDir); 
 end
 
 %% Variables
 C_nom        = 1024;          % Ah
-min_charge_duration = 10;     % [s] - Charging duration (30 seconds or more)
+min_charge_duration = 300;     % [s] - Charging duration (30 seconds or more)
 max_P_std    = 5;            % Max power standard deviation [kW]
 max_I_std    = C_nom *0.02;   % Max current standard deviation [A] 10.24A
 

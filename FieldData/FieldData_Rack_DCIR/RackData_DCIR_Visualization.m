@@ -7,7 +7,7 @@
 clc; clear; close all;
 
 %% Load data
-dataPath = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_0728\all_chg_events_current_clustering_all_years.mat';
+dataPath = 'D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_0728\all_chg_events_current_clustering_all_years.mat';
 load(dataPath);
 
 %% Parameters

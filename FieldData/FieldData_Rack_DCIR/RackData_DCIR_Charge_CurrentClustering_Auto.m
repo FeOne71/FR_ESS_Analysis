@@ -9,9 +9,10 @@
 clc; clear; close all;
 
 %% Directory
-dataDir  = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\Rack_raw2mat';
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat';
 yearList = {'2021', '2022', '2023'}; 
-saveDir  = fullfile('G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\FieldData\FieldData_Rack_DCIR\DCIR_Charge_0728');
+saveDir = fullfile('D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\DCIR_Charge_0728');
+
 
 if ~exist(saveDir, 'dir')
     mkdir(saveDir); 
@@ -20,7 +21,7 @@ end
 %% Rack Variables (2P14S * 17S = 476)
 C_nom_cell   = 128;           % Ah
 P_nom_rack   = 112;           % 3.68*64/1000 [kW] | 0.23552 * 2P * 14S * 17S = 112
-min_duration = 30;            % [s] - Charging duration (30 seconds or more)
+min_duration = 300;            % [s] - Charging duration (30 seconds or more)
 max_P_std    = P_nom_rack * 0.005;  % Max power standard deviation [kW] 1.12kW
 max_I_std    = C_nom_cell * 0.005;   % Max current standard deviation [A] 1.28A
 
