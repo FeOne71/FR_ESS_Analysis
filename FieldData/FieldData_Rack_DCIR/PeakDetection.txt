@@ -1,0 +1,202 @@
+clc; clear; close all
+
+%% 1. 기본 경로 및 날짜 폴더 설정
+baseDir    = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS';
+kimjFolder = '202206_KIMJ';
+basePath   = fullfile(baseDir, kimjFolder);
+
+allItems    = dir(basePath);
+folderNames = {allItems([allItems.isdir]).name};
+
+% 날짜 형식의 폴더만 선택 (예: '20210615' 형식)
+isDateFolder = cellfun(@(x) ~isempty(regexp(x, '^\d{8}$', 'once')), folderNames);
+dateFolders  = sort(folderNames(isDateFolder));
+
+%% 2. 원하는 기간 선택
+weekStart = '20220621';
+weekEnd   = '20220621';
+
+weekFolders = dateFolders(cellfun(@(x) (str2double(x) >= str2double(weekStart)) && ...
+                                       (str2double(x) <= str2double(weekEnd)), dateFolders));
+fprintf('선택된 기간 폴더:\n');
+disp(weekFolders);
+
+filePatternTemplate = 'JXR_BSC_Section_%s*.csv';
+n_hd = 2;  % 헤더 줄 수 (데이터 읽을 때 제외할 행 수)
+
+%% 3. 각 날짜 폴더 내 파일 처리 및 데이터 누적
+T_group = table();
+for i = 1:length(weekFolders)
+    currDate   = weekFolders{i};
+    data_folder = fullfile(baseDir, kimjFolder, currDate);
+    filePattern = fullfile(data_folder, sprintf(filePatternTemplate, currDate));
+    fileList    = dir(filePattern);
+    
+    for j = 1:length(fileList)
+        fullPath = fullfile(fileList(j).folder, fileList(j).name);
+        
+        % 데이터 미리보기 (헤더 파악)
+        previewData = readcell(fullPath, 'Range', 'A1:ZZ5');
+        headerLine = string(previewData(4, :));
+        variableNames = matlab.lang.makeUniqueStrings( ...
+            matlab.lang.makeValidName(cellstr(string(previewData(5, :)))));
+        
+        % 전체 데이터 읽기 (헤더 제외)
+        fullDataAll = readtable(fullPath, 'FileType', 'text', ...
+            'ReadVariableNames', false, 'TextType','char');
+        fullData = fullDataAll(n_hd+1:end, :);
+        fullData.Properties.VariableNames = variableNames;
+        
+        % 누적
+        T_group = vertcat(T_group, fullData);
+    end
+end
+
+%% 4. Time 열 datetime 변환
+T_group.Time = datetime(T_group.Time, 'InputFormat', 'yyyy-MM-dd HH:mm');
+
+%% 5. 팩 전류 기반 C-rate 계산 (원하시면 사용)
+% (예시로 남겨둔 코드, 필요 없으면 주석 처리)
+cellCapacity   = 64;           % 셀 용량 (Ah)
+moduleCapacity = cellCapacity*2;  % 2P → 128 Ah
+packCapacity   = moduleCapacity*8; % 8개 병렬 → 1024 Ah
+C_rate_pack    = T_group.DCCurrent_A_ / packCapacity;
+
+ %% 6. AverageSOC - Online / Total 비교 (예시 플롯) 현재는 사용 X Peak detect 과 관련 X
+% figure;
+% plot(T_group.Time, T_group.("AverageSOC___"), '-r');
+% hold on;
+% plot(T_group.Time, T_group.("AverageSOC____1"), '--b');
+% xlabel('Time'); ylabel('Average SOC (%)');
+% title(sprintf('Time vs Average SOC(%%) for %s ~ %s', weekFolders{1}, weekFolders{end}));
+% legend('Average SOC - Online','Average SOC - Total','Location','best');
+% grid on;
+
+%% 7. "Total" SOC에 대해 피크를 찾고, 특정 임계값 차이 구간만 따로 플롯
+soc     = T_group.("AverageSOC____1");  % Total SOC
+timeSOC = T_group.Time;
+
+% 피크 검출에 사용할 최소 돌출도 설정 (변화량이 1 미만인 피크는 무시)
+minProminence = 1.5;
+
+% Total SOC 데이터를 기준으로 최대값 피크 검출 (MinPeakProminence 옵션 적용)
+[peaks_max, locs_max] = findpeaks(soc, 'MinPeakProminence', minProminence);
+
+% 최소값 피크 검출 (데이터 반전 후, 동일한 옵션 적용)
+[peaks_min_neg, locs_min] = findpeaks(-soc, 'MinPeakProminence', minProminence);
+peaks_min = -peaks_min_neg;
+
+% (이미 작성된 기존 코드에 이어서)
+% 최대/최소 피크를 결합하고 시간 순으로 정렬
+allLocs  = sort([locs_max; locs_min]);   % 인덱스
+allPeaks = soc(allLocs);
+
+
+%% 피크 간 SOC 차이 계산
+threshold = 25;                 % 예: 20 이상 차이 나는 구간만 보겠다
+diffPeaks = abs(diff(allPeaks)); 
+
+% 차이가 threshold 이상인 구간(피크 쌍) 찾기
+idx_bigDiff = find(diffPeaks >= threshold);
+
+fprintf('\n[INFO] 임계값(%.1f) 이상인 피크 쌍 개수: %d\n', threshold, length(idx_bigDiff));
+
+%% 8. 차이가 큰 구간만 따로 (각각) 플롯
+% - 구간: allLocs(k) ~ allLocs(k+1)
+for i = 1:length(idx_bigDiff)
+    k    = idx_bigDiff(i);     % diffPeaks(k)는 allPeaks(k)와 (k+1) 차이
+    loc1 = allLocs(k);
+    loc2 = allLocs(k+1);
+    
+    % 해당 구간 슬라이스
+    t_segment   = timeSOC(loc1:loc2);
+    soc_segment = soc(loc1:loc2);
+    
+    % 새로운 Figure 생성
+    figure
+    
+    % (1) 구간 전체: 실선 + 마커 없음
+    plot(t_segment, soc_segment, ...
+         'LineStyle','-', 'LineWidth',1.2, ...
+         'Marker','none', 'Color','k'); 
+    hold on; grid on;
+    
+    % (2) 구간 양 끝점(피크)에만 마커 표시
+    plot(t_segment(1),   soc_segment(1), ...
+         'o','MarkerSize',6, 'MarkerEdgeColor','b','MarkerFaceColor','b');
+    plot(t_segment(end), soc_segment(end), ...
+         'o','MarkerSize',6, 'MarkerEdgeColor','b','MarkerFaceColor','b');
+    
+    % 제목 및 레이블
+    xlabel('Time'); ylabel('SOC');
+   
+end
+
+figure
+hold on; grid on;
+
+for i = 1:length(idx_bigDiff)
+    k    = idx_bigDiff(i);
+    loc1 = allLocs(k);
+    loc2 = allLocs(k+1);
+
+    t_segment   = timeSOC(loc1:loc2);
+    soc_segment = soc(loc1:loc2);
+
+    %---------------------------------------------------------
+    % (1) 구간 전체는 '선'만 그리기 (중간에 marker 찍지 않음)
+    %---------------------------------------------------------
+    plot(t_segment, soc_segment, ...
+         'LineStyle','-', ...       % 실선
+         'LineWidth',1.2, ...
+         'Marker','none', ...       % 중간점들은 마커 X
+         'Color','k'); % 원하는 색상 or 'b' etc.
+
+    %---------------------------------------------------------
+    % (2) 구간 양 끝 점만 마커로 강조
+    %---------------------------------------------------------
+    % 구간 시작점:
+    plot(t_segment(1), soc_segment(1), ...
+         'o', 'MarkerSize',6, ...
+         'MarkerEdgeColor','b', ...
+         'MarkerFaceColor','b');
+    % 구간 끝점:
+    plot(t_segment(end), soc_segment(end), ...
+         'o', 'MarkerSize',6, ...
+         'MarkerEdgeColor','b', ...
+         'MarkerFaceColor','b');
+end
+
+xlabel('Time');
+ylabel('SOC');
+
+% legend('Location','best');
+
+
+
+figure
+plot(timeSOC, soc, '-k', 'LineWidth',1.2);  % 전체 SOC 곡선 (검정 실선)
+hold on; grid on;
+
+% (1) 전체 피크 = 빨간 원
+plot(timeSOC(allLocs), allPeaks, 'ro', ...
+    'MarkerFaceColor','r', 'MarkerSize',5);
+
+% (2) 임계값 이상 차이가 나는 피크 쌍 = 파란 사각
+for i = 1:length(idx_bigDiff)
+    k1 = idx_bigDiff(i);   % allPeaks(k1) vs allPeaks(k1+1)
+    k2 = k1 + 1;
+    loc1 = allLocs(k1);
+    loc2 = allLocs(k2);
+    
+    % 파란 사각 마커로 표시
+    plot(timeSOC(loc1), soc(loc1), 'bs', ...
+         'MarkerFaceColor','b', 'MarkerSize',6);
+    plot(timeSOC(loc2), soc(loc2), 'bs', ...
+         'MarkerFaceColor','b', 'MarkerSize',6);
+end
+
+xlabel('Time');
+ylabel('SOC');
+
+legend('SOC','All Peaks','Fit Peaks','Location','best');
