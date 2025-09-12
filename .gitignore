@@ -8,3 +8,7 @@
 # *.mat
 # *.fig
 # *.csv
+
+# 모든 Archive 폴더 무시
+**/Archive/
+**/Archive/**
