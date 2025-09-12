@@ -1,14 +1,34 @@
+# ===== (중요) 디렉터리 통과 허용 =====
+!*/
 
-*
+# ===== 데이터/바이너리 무시 =====
+*.mat
+*.fig
+*.csv
+*.slx
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.log
+*.bak
+*.tmp
+*.asv
 
-!FieldData/**
-!Experiment_DriveCycle_Fitting/**
-!Experimental Data/**
-
-# *.mat
-# *.fig
-# *.csv
-
-# 모든 Archive 폴더 무시
+# ===== 모든 Archive 폴더 무시 =====
 **/Archive/
 **/Archive/**
+
+# ===== 코드/문서 파일은 항상 포함 =====
+!**/*.m
+!**/*.mlx
+!**/*.md
+!**/*.txt
+
+# ===== 주요 폴더는 명시적으로 포함(부모 폴더 unignore) =====
+!FieldData/
+!FieldData/**
+!ExperimentalData/
+!ExperimentalData/**
+!Experiment_DriveCycle_Fitting/
+!Experiment_DriveCycle_Fitting/**

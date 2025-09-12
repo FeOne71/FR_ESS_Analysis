@@ -1,0 +1,140 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% RPT_Parsing.m
+% - Parse RPT CSVs into channel-wise MAT files
+% - Cycle/Step hierarchy, original headers preserved
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clear; clc; close all;
+
+% Config
+dataDir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\RPT';
+outDir  = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\Parsed';
+if ~exist(outDir,'dir'); mkdir(outDir); end
+
+channels = {'Ch9','Ch10','Ch11','Ch12','Ch13','Ch14','Ch15','Ch16'};
+rptCycles = {'0cyc','200cyc','400cyc'};
+I_1C = 64; % [A]
+
+%% Parse per channel and cycle
+for chIdx = 1:numel(channels)
+    channel = channels{chIdx};
+    
+    for r = 1:numel(rptCycles)
+        cyc = rptCycles{r};
+        
+        % Clear intrim for each cycle to avoid size conflicts
+        clear intrim;
+        
+        csvPath = fullfile(dataDir, sprintf('%s_RPT_%s.csv', channel, cyc));
+        if ~exist(csvPath,'file'); fprintf('Skip missing: %s\n', csvPath); continue; end
+        
+        % Read table (preserve original headers)
+        data = readtable(csvPath, 'VariableNamingRule','preserve');
+        
+        % Debug: Check column names
+        % fprintf('Column names: %s\n', strjoin(data.Properties.VariableNames, ', '));
+        
+        % Time normalization
+        if ~isduration(data.("Total Time"))
+            data.("Total Time") = duration(data.("Total Time"),'InputFormat','hh:mm:ss');
+        end
+        % Parse step-relative Time column if present; else will compute later
+        hasStepTime = ismember("Time", data.Properties.VariableNames);
+        if hasStepTime
+            if ~isduration(data.("Time"))
+                % Try multiple common input formats
+                timeStr = string(data.("Time"));
+                try
+                    data.("Time") = duration(timeStr,'InputFormat','hh:mm:ss.SSS');
+                catch
+                    try
+                        data.("Time") = duration(timeStr,'InputFormat','mm:ss.SSS');
+                    catch
+                        data.("Time") = duration(timeStr,'InputFormat','hh:mm:ss');
+                    end
+                end
+            end
+        end
+        
+        % Build intrim like reference
+        intrim.StepIdx = data.("Step Index");
+        intrim.StepType = data.("Step Type");                        
+        intrim.CycleIdx = data.("Cycle Index");
+        intrim.t = seconds(data.("Total Time"));
+        intrim.steptime = data.("Time");
+        intrim.steptime_s = seconds(intrim.steptime);
+        intrim.V = data.("Voltage(V)");
+        intrim.I = data.("Current(A)");
+        intrim.Batt_Temp = data.("T1(℃)");
+        intrim.Q = data.("Capacity(Ah)");
+        intrim.chgQ = data.("Chg. Cap.(Ah)");
+        intrim.DchgQ = data.("DChg. Cap.(Ah)");
+        intrim.E_Wh = data.("Energy(Wh)");        
+        intrim.chgE_Wh = data.("Chg. Energy(Wh)");
+        intrim.DchgE_Wh = data.("DChg. Energy(Wh)");
+        intrim.P_W = data.("Power(W)");
+        intrim.dQdV_AhV = data.("dQ/dV(mAh/V)");
+        intrim.SOCDOD = data.("SOC/DOD(%)");
+        
+        % Step assign - charging/rest/discharging
+        intrim.type = char(zeros(size(intrim.t))); % assign space
+        intrim.type(intrim.I>0) = 'C';
+        intrim.type(intrim.I==0) = 'R';
+        intrim.type(intrim.I<0) = 'D';
+        
+        % step
+        n = 1;
+        fprintf('Data size: %d rows\n', size(intrim.t,1));
+        intrim.step(1) = n;
+        for i = 2:size(intrim.t,1)
+            if intrim.type(i) == intrim.type(i-1)
+                intrim.step(i) = n;
+            else
+                n = n + 1;
+                intrim.step(i) = n;
+            end
+        end
+        
+        %% parsing
+        step_vec = unique(intrim.step);
+        
+        for j = 1:length(step_vec)
+            sel = intrim.step==step_vec(j);
+            pdata(j).StepIdx = intrim.StepIdx(sel);
+            pdata(j).StepType = intrim.StepType(sel);
+            pdata(j).step = intrim.step(sel);
+            pdata(j).type = intrim.type(sel);            
+            pdata(j).CycleIdx = intrim.CycleIdx(sel);
+            pdata(j).t = intrim.t(sel);
+            pdata(j).steptime = intrim.steptime(sel);
+            pdata(j).steptime_double = seconds(pdata(j).steptime);
+            pdata(j).V = intrim.V(sel);
+            pdata(j).I = intrim.I(sel);
+            pdata(j).Batt_Temp = intrim.Batt_Temp(sel);
+            pdata(j).Q = intrim.Q(sel);
+            pdata(j).chgQ = intrim.chgQ(sel);
+            pdata(j).DchgQ = intrim.DchgQ(sel);
+            pdata(j).E_Wh = intrim.E_Wh(sel);
+            pdata(j).chgE_Wh = intrim.chgE_Wh(sel);
+            pdata(j).DchgE_Wh = intrim.DchgE_Wh(sel);
+            pdata(j).P_W = intrim.P_W(sel);
+            pdata(j).dQdV_AhV = intrim.dQdV_AhV(sel);
+            pdata(j).SOCDOD = intrim.SOCDOD(sel);
+            pdata(j).Crate = pdata(j).I/I_1C;
+
+            
+            % Keep first value for scalar fields
+            pdata(j).step = pdata(j).step(1);
+            pdata(j).type = pdata(j).type(1);
+        end
+        
+        % Save
+        % Convert cyc to simple number for MAT filename
+        cyc_num = strrep(cyc, 'cyc', '');
+        saveName = sprintf('RPT%s_ch%s_parsed.mat',cyc_num, lower(channel(3:end)));
+        channel_var = channel; %#ok<NASGU>
+        cyc_var = cyc; %#ok<NASGU>
+        save(fullfile(outDir, saveName), 'data', 'intrim', 'pdata', 'channel_var', 'cyc_var');
+        fprintf('Saved: %s\n', fullfile(outDir, saveName));
+    end
+end

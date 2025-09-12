@@ -1,0 +1,337 @@
+ExperimentalData/Aging/csv/Ch10_1C1C_4cpd_Vmax_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch10_1C1C_4cpd_vmax_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch11_1C1C_8cpd_V70_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch11_1C1C_8cpd_v70_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch12_1C1C_8cpd_Vmax_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch12_1C1C_8cpd_vmax_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch13_3C1C_4cpd_v70_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch13_3C1C_4pcd_V70_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch14_3C1C_4cpd_Vmax_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch14_3C1C_4cpd_vmax_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch15_3C1C_8cpd_V70_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch15_3C1C_8cpd_v70_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch16_3C1C_8cpd_Vmax_0to200cyc.csv
+ExperimentalData/Aging/csv/Ch16_3C1C_8cpd_vmax_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch9_1C1C_4cpd_v70_200to400cyc.csv
+ExperimentalData/Aging/csv/Ch9_1C1C_4pcd_V70_0to200cyc.csv
+ExperimentalData/Aging/figures/Ch10_1C1C_4cpd_Vmax_0to200cyc_Aging0to200.fig
+ExperimentalData/Aging/figures/Ch11_1C1C_8cpd_V70_0to200cyc_Aging0to200.fig
+ExperimentalData/Aging/mat/Ch09_1C1C_4pcd_V70_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch10_1C1C_4cpd_Vmax_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch11_1C1C_8cpd_V70_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch12_1C1C_8cpd_Vmax_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch13_3C1C_4pcd_V70_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch14_3C1C_4cpd_Vmax_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch15_3C1C_8cpd_V70_0to200cyc_degradation.mat
+ExperimentalData/Aging/mat/Ch16_3C1C_8cpd_Vmax_0to200cyc_degradation.mat
+ExperimentalData/Capacity/KEPCO_ESS_CH12_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch09_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch10_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch11_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch13_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch14_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch15_Capacity.csv
+ExperimentalData/Capacity/KEPCO_ESS_Ch16_Capacity.csv
+ExperimentalData/Capacity_Trend_Figures/Ch10_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch10_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch10_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch11_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch11_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch11_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch12_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch12_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch12_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch13_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch13_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch13_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch14_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch14_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch14_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch15_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch15_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch15_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch16_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch16_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch16_Capacity_Trend_0727.fig
+ExperimentalData/Capacity_Trend_Figures/Ch9_Capacity_Trend_.fig
+ExperimentalData/Capacity_Trend_Figures/Ch9_Capacity_Trend_0708.fig
+ExperimentalData/Capacity_Trend_Figures/Ch9_Capacity_Trend_0727.fig
+ExperimentalData/DOE_Profile/Ch10_Aging_Profile.fig
+ExperimentalData/DOE_Profile/Ch10_DriveCycle_Profile.fig
+ExperimentalData/DOE_Profile/Ch10_RPT0_Profile.fig
+ExperimentalData/DOE_Profile/Ch11_Aging_Profile.fig
+ExperimentalData/DOE_Profile/Ch11_DriveCycle_Profile.fig
+ExperimentalData/DOE_Profile/Ch11_RPT0_Profile.fig
+ExperimentalData/DOE_Profile/Ch13_Aging_Profile.fig
+ExperimentalData/DOE_Profile/Ch13_DriveCycle_Profile.fig
+ExperimentalData/DOE_Profile/Ch13_RPT0_Profile.fig
+ExperimentalData/DOE_Profile/Ch9_Aging_Profile.fig
+ExperimentalData/DOE_Profile/Ch9_DriveCycle_Profile.fig
+ExperimentalData/DOE_Profile/Ch9_RPT0_Profile.fig
+ExperimentalData/Drive Cycle/DCIR_Statistical_Comparison_Results.mat
+ExperimentalData/Drive Cycle/Lab_DC_DCIR_0cyc_Events.mat
+ExperimentalData/Drive Cycle/Lab_DC_DCIR_200cyc_Events.mat
+ExperimentalData/Drive Cycle/Lab_DC_DCIR_Events.mat
+ExperimentalData/Drive Cycle/csv/Ch10_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch10_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch11_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch11_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch12_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch12_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch13_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch13_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch14_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch14_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch15_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch15_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch16_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch16_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch9_Drive_0cyc.csv
+ExperimentalData/Drive Cycle/csv/Ch9_Drive_200cyc.csv
+ExperimentalData/Drive Cycle/figures/Ch10_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch10_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch11_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch11_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch12_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch12_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch13_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch13_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch14_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch14_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch15_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch15_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch16_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch16_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/Ch9_Drive_0cyc_real_load.fig
+ExperimentalData/Drive Cycle/figures/Ch9_Drive_0cyc_real_load.mat
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch10_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch11_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch12_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch13_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch14_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch15_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch16_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_10s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_1s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_30s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_3s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_50s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/DC_Events/ch9_5s_DCIR_Comparison.fig
+ExperimentalData/Drive Cycle/figures/Lab_DC_DCIR_Results.fig
+ExperimentalData/Drive Cycle/parsedDriveCycle/parsedDriveCycle_0cyc.mat
+ExperimentalData/Drive Cycle/parsedDriveCycle/parsedDriveCycle_0cyc_filtered.mat
+ExperimentalData/Drive Cycle/parsedDriveCycle/parsedDriveCycle_200cyc_filtered.mat
+ExperimentalData/Drive Cycle/selected_profiles.mat
+ExperimentalData/RPT/Archive/Ch10_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch10_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch10_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch11_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch11_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch11_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch12_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch12_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch12_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch13_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch13_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch13_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch14_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch14_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch14_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch15_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch15_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch15_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch16_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch16_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch16_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/Ch9_RPT_0cyc_step1to4_parsed.mat
+ExperimentalData/RPT/Archive/Ch9_RPT_200cyc_OCV_interp.mat
+ExperimentalData/RPT/Archive/Ch9_RPT_200cyc_StaticCap_RPT200.mat
+ExperimentalData/RPT/Archive/load1_data.mat
+ExperimentalData/RPT/Archive/selected_profiles.mat
+ExperimentalData/RPT/ForChecking/Ch10_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch11_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch12_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch13_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch14_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch15_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch16_RPT_200cyc.csv
+ExperimentalData/RPT/ForChecking/Ch9_RPT_200cyc.csv
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch10_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch11_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch12_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch13_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch14_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch15_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch16_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/StaticCapacity/Ch9_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch10_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch11_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch12_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch13_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch14_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch15_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch16_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing/dQdV/Ch9_dQdV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch10_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch10_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch11_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch11_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch12_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch12_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch13_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch13_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch14_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch14_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch15_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch15_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch16_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch16_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch9_DCIR.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/DCIR/Ch9_DCIR_SOC.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Average_OCV_by_Cycle.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch10_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch11_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch12_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch13_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch14_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch15_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch16_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/OCV/Ch9_OCV.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch10_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch11_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch12_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch13_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch14_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch15_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch16_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results/StaticCapacity/Ch9_StaticCapacity.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch10_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch11_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch12_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch13_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch14_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch15_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch16_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR/Ch9_DCIR_SOC_calcCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_calcCap/DCIR_SOC_data_UPDATED.mat
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch10_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch11_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch12_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch13_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch14_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch15_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch16_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR/Ch9_DCIR_SOC_fixedCap.fig
+ExperimentalData/RPT/RPT_Postprocessing_Results_fixedCap/DCIR_SOC_data_NEW.mat
+ExperimentalData/RPT/Summary/Ch10_Capacity.fig
+ExperimentalData/RPT/Summary/Ch10_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch10_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch11_Capacity.fig
+ExperimentalData/RPT/Summary/Ch11_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch11_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch12_Capacity.fig
+ExperimentalData/RPT/Summary/Ch12_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch12_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch13_Capacity.fig
+ExperimentalData/RPT/Summary/Ch13_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch13_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch14_Capacity.fig
+ExperimentalData/RPT/Summary/Ch14_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch14_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch15_Capacity.fig
+ExperimentalData/RPT/Summary/Ch15_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch15_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch16_Capacity.fig
+ExperimentalData/RPT/Summary/Ch16_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch16_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/Ch9_Capacity.fig
+ExperimentalData/RPT/Summary/Ch9_Q_OCV_.fig
+ExperimentalData/RPT/Summary/Ch9_SOC_OCV_.fig
+ExperimentalData/RPT/Summary/OCV_interpolation_functions.mat
+ExperimentalData/RPT/Voltage_Analysis_Results/voltage_soc_analysis.mat
+ExperimentalData/RPT/Voltage_Analysis_Results/year_voltage_soc_ranges.fig
+ExperimentalData/RPT/csv/Ch10_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch10_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch11_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch11_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch12_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch12_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch13_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch13_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch14_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch14_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch15_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch15_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch16_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch16_RPT_200cyc.csv
+ExperimentalData/RPT/csv/Ch9_RPT_0cyc.csv
+ExperimentalData/RPT/csv/Ch9_RPT_200cyc.csv
+ExperimentalData/RPT/figures/Ch10_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch10_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch10_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch10_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch11_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch11_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch11_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch11_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch12_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch12_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch12_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch12_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch13_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch13_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch13_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch13_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch14_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch14_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch14_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch14_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch15_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch15_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch15_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch15_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch16_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch16_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch16_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch16_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/Ch9_RPT_0cyc.fig
+ExperimentalData/RPT/figures/Ch9_RPT_0cyc_OCV.fig
+ExperimentalData/RPT/figures/Ch9_RPT_200cyc.fig
+ExperimentalData/RPT/figures/Ch9_RPT_200cyc_OCV_SOC.fig
+ExperimentalData/RPT/figures/OCV_integrated_RPT0cyc.fig
+ExperimentalData/RPT/figures/OCV_integrated_RPT0cyc_ECM.fig
