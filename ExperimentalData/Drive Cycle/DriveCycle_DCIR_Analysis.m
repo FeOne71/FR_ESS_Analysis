@@ -240,10 +240,8 @@ for ch_idx = 1:length(channels)
                         I2 = I_seg(idx_dt);
                         dV = V2 - V1;
                         dI = I2 - I1;
-                        if dI > 0 && dV > 0
-                            dcir_val = (dV / dI) * 1000;
-                        elseif dI < 0 && dV < 0
-                            dcir_val = (dV / dI) * 1000;
+                        dcir_val = (dV / dI) * 1000;
+
                         else
                             dcir_val = NaN;
                         end

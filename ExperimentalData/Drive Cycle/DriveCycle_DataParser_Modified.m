@@ -7,12 +7,27 @@
 clear; clc; close all;
 
 % 경로 설정 - 현재 디렉토리 사용
-folderPath = 'G:\공유 드라이브\Battery Software Lab\0_Group Meeting\개인별_미팅자료\정철원\Experimental Data\Drive Cycle\csv';
-saveFolder = fullfile(folderPath, 'parsed_data');
+dataDir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\Drive Cycle';
+saveFolder = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\Drive Cycle\parsed_data';
+
 if ~exist(saveFolder, 'dir'); mkdir(saveFolder); end
 
-% 파일 목록 (8개 채널)
-fileNames = {
+% 사이클별 파일 목록 (8개 채널)
+cycleTypes = {'0cyc', '200cyc', '400cyc'};
+
+% 각 사이클별 파일명 생성
+fileNames_0cyc = {
+    'Ch9_Drive_0cyc.csv';
+    'Ch10_Drive_0cyc.csv';
+    'Ch11_Drive_0cyc.csv';
+    'Ch12_Drive_0cyc.csv';
+    'Ch13_Drive_0cyc.csv';
+    'Ch14_Drive_0cyc.csv';
+    'Ch15_Drive_0cyc.csv';
+    'Ch16_Drive_0cyc.csv'
+};
+
+fileNames_200cyc = {
     'Ch9_Drive_200cyc.csv';
     'Ch10_Drive_200cyc.csv';
     'Ch11_Drive_200cyc.csv';
@@ -21,6 +36,17 @@ fileNames = {
     'Ch14_Drive_200cyc.csv';
     'Ch15_Drive_200cyc.csv';
     'Ch16_Drive_200cyc.csv'
+};
+
+fileNames_400cyc = {
+    'Ch9_Drive_400cyc.csv';
+    'Ch10_Drive_400cyc.csv';
+    'Ch11_Drive_400cyc.csv';
+    'Ch12_Drive_400cyc.csv';
+    'Ch13_Drive_400cyc.csv';
+    'Ch14_Drive_400cyc.csv';
+    'Ch15_Drive_400cyc.csv';
+    'Ch16_Drive_400cyc.csv'
 };
 
 % SOC별 Step Index 정의
@@ -35,15 +61,28 @@ profileNames = {'DC1', 'DC2', 'DC3', 'DC4', 'DC5', 'DC6', 'DC7', 'DC8'};
 initialRestTime = 8 * 60;  % 초기 8분 휴지기
 finalRestTime = 8 * 60;    % 후기 8분 휴지기 (최소값)
 
-% 각 채널별 데이터 구조체 초기화
+% 각 사이클별 데이터 구조체 초기화
+parsedDriveCycle_0cyc = struct();
 parsedDriveCycle_200cyc = struct();
+parsedDriveCycle_400cyc = struct();
 
 fprintf('실부하 프로파일 데이터 파싱 시작...\n');
 
-for i = 1:length(fileNames)
-    filename = fileNames{i};
-    filepath = fullfile(folderPath, filename);
+% 각 사이클별로 처리
+cycleFileNames = {fileNames_0cyc, fileNames_200cyc, fileNames_400cyc};
+
+for cycleIdx = 1:length(cycleTypes)
+    cycleType = cycleTypes{cycleIdx};
+    fileNames = cycleFileNames{cycleIdx};
     
+    fprintf('\n=== %s 사이클 처리 시작 ===\n', cycleType);
+    fprintf('데이터 디렉토리: %s\n', dataDir);
+    
+    for i = 1:length(fileNames)
+    filename = fileNames{i};
+    filepath = fullfile(dataDir, filename);
+    
+    fprintf('파일 확인: %s\n', filepath);
     if exist(filepath, 'file') ~= 2
         fprintf('파일 없음: %s\n', filepath);
         continue;
@@ -52,7 +91,7 @@ for i = 1:length(fileNames)
     fprintf('처리 중: %s\n', filename);
     
     % CSV 파일 읽기
-    T = readtable(filepath);
+    T = readtable(filepath, 'VariableNamingRule', 'preserve');
     
     % 데이터 추출
     stepIndex = T{:,2};     % Step Index
@@ -65,10 +104,10 @@ for i = 1:length(fileNames)
     % 채널 이름 추출
     [~, baseName, ~] = fileparts(filename);
     channelName = extractBetween(baseName, 'Ch', '_');
-    channelFieldName = sprintf('ch%s_Drive_200cyc', channelName{1});
+    channelFieldName = sprintf('ch%s_Drive_%s', channelName{1}, cycleType);
     
     % 채널별 구조체 초기화
-    parsedDriveCycle_200cyc.(channelFieldName) = struct();
+    eval(sprintf('parsedDriveCycle_%s.(channelFieldName) = struct();', cycleType));
     
     % SOC90 데이터 추출 및 처리
     fprintf('  SOC90 데이터 추출 중...\n');
@@ -91,11 +130,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % 구조체에 저장
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).stepIndex = stepIdx;
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC90.(profileName).V = filtered_V;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC90.(profileName).I = filtered_I;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC90.(profileName).t = filtered_t;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC90.(profileName).totalTime = filtered_totalTime;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC90.(profileName).stepIndex = stepIdx;', cycleType));
             
             fprintf('    %s: %d -> %d data points (후기 휴지기 이후 제거)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -125,11 +164,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % 구조체에 저장
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).stepIndex = stepIdx;
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC70.(profileName).V = filtered_V;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC70.(profileName).I = filtered_I;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC70.(profileName).t = filtered_t;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC70.(profileName).totalTime = filtered_totalTime;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC70.(profileName).stepIndex = stepIdx;', cycleType));
             
             fprintf('    %s: %d -> %d data points (후기 휴지기 이후 제거)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -159,11 +198,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % 구조체에 저장
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).stepIndex = stepIdx;
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC50.(profileName).V = filtered_V;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC50.(profileName).I = filtered_I;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC50.(profileName).t = filtered_t;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC50.(profileName).totalTime = filtered_totalTime;', cycleType));
+            eval(sprintf('parsedDriveCycle_%s.(channelFieldName).SOC50.(profileName).stepIndex = stepIdx;', cycleType));
             
             fprintf('    %s: %d -> %d data points (후기 휴지기 이후 제거)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -173,40 +212,48 @@ for i = 1:length(fileNames)
     end
     
     fprintf('  %s 완료\n\n', channelName{1});
+    end
+    
+    % 각 사이클별 결과 저장
+    savePath = fullfile(saveFolder, sprintf('parsedDriveCycle_%s_filtered.mat', cycleType));
+    eval(sprintf('save(savePath, ''parsedDriveCycle_%s'');', cycleType));
+    fprintf('%s 사이클 파싱 완료! 결과가 저장되었습니다: %s\n', cycleType, savePath);
 end
 
-% 결과 저장
-savePath = fullfile(saveFolder, 'parsedDriveCycle_200cyc_filtered.mat');
-save(savePath, 'parsedDriveCycle_200cyc');
+fprintf('\n=== 전체 파싱 완료 ===\n');
 
-fprintf('파싱 완료! 결과가 저장되었습니다: %s\n', savePath);
-
-% 구조체 요약 출력
-fprintf('\n=== 파싱 결과 요약 ===\n');
-channels = fieldnames(parsedDriveCycle_200cyc);
-for i = 1:length(channels)
-    channelName = channels{i};
-    fprintf('채널: %s\n', channelName);
+% 각 사이클별 구조체 요약 출력
+for cycleIdx = 1:length(cycleTypes)
+    cycleType = cycleTypes{cycleIdx};
+    fprintf('\n=== %s 사이클 파싱 결과 요약 ===\n', cycleType);
     
-    % 각 SOC별 데이터 개수 확인
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC90')
-        soc90_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC90);
-        fprintf('  SOC90: %d개 프로파일\n', length(soc90_fields));
+    eval(sprintf('currentData = parsedDriveCycle_%s;', cycleType));
+    channels = fieldnames(currentData);
+    
+    for i = 1:length(channels)
+        channelName = channels{i};
+        fprintf('채널: %s\n', channelName);
+        
+        % 각 SOC별 데이터 개수 확인
+        if isfield(currentData.(channelName), 'SOC90')
+            soc90_fields = fieldnames(currentData.(channelName).SOC90);
+            fprintf('  SOC90: %d개 프로파일\n', length(soc90_fields));
+        end
+        
+        if isfield(currentData.(channelName), 'SOC70')
+            soc70_fields = fieldnames(currentData.(channelName).SOC70);
+            fprintf('  SOC70: %d개 프로파일\n', length(soc70_fields));
+        end
+        
+        if isfield(currentData.(channelName), 'SOC50')
+            soc50_fields = fieldnames(currentData.(channelName).SOC50);
+            fprintf('  SOC50: %d개 프로파일\n', length(soc50_fields));
+        end
     end
     
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC70')
-        soc70_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC70);
-        fprintf('  SOC70: %d개 프로파일\n', length(soc70_fields));
-    end
-    
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC50')
-        soc50_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC50);
-        fprintf('  SOC50: %d개 프로파일\n', length(soc50_fields));
-    end
+    fprintf('총 파싱된 데이터: %d개 채널 × 3개 SOC × 8개 프로파일 = %d개 데이터셋\n', ...
+            length(channels), length(channels) * 3 * 8);
 end
-
-fprintf('\n총 파싱된 데이터: %d개 채널 × 3개 SOC × 8개 프로파일 = %d개 데이터셋\n', ...
-        length(channels), length(channels) * 3 * 8);
 
 %% 서브 함수: 후기 휴지기 이후 데이터 제거
 function [filtered_V, filtered_I, filtered_t, filtered_totalTime] = ...
@@ -245,7 +292,7 @@ function [filtered_V, filtered_I, filtered_t, filtered_totalTime] = ...
         % 후기 휴지기 시작점에서 finalRestTime만큼 유지한 후 제거
         cutoffTime = time_normalized(finalRestStartIdx) + finalRestTime;
         cutoffIdx = find(time_normalized <= cutoffTime, 1, 'last');
-        
+
         if ~isempty(cutoffIdx)
             filtered_V = voltage(1:cutoffIdx);
             filtered_I = current(1:cutoffIdx);
@@ -265,4 +312,4 @@ function [filtered_V, filtered_I, filtered_t, filtered_totalTime] = ...
         filtered_t = time;
         filtered_totalTime = totalTime;
     end
-end 
+end
