@@ -7,8 +7,9 @@
 clc; clear; close all;
 
 data_dir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS';
-years    = {'202206_KIMJ'}; %,'202206_KIMJ','202306_KIMJ'};
+years    = {'202106_KIMJ'}; %,'202206_KIMJ','202306_KIMJ'};
 % save_dir = 'G:\공유 드라이브\Battery Software Lab\Projects\KEPCO_ATB_Lab\ESS_Data_Preprocessing\raw2mat_ver04\Rack_raw2mat';
+save_dir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat';
 
 %% 2. Folder Traversal
 for y = 1:length(years)

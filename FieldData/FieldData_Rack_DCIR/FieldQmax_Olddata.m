@@ -27,6 +27,11 @@ Np = 2;                             % 2P (참조)
 dataFile = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\2021\202106\Raw_20210607.mat';
 ocvFile  = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\OCV_integrated\OCV_integrated.mat';
 
+% Create FieldQmax folder for results
+if ~exist('FieldQmax', 'dir')
+    mkdir('FieldQmax');
+end
+
 %% Load rack data
 S = load(dataFile);                 % expects Raw_Rack
 if ~isfield(S, 'Raw_Rack')
@@ -187,14 +192,30 @@ tl = tiledlayout(fig, 2, 2, 'TileSpacing','compact', 'Padding','compact');
 
 % (1,1) Current with SOC overlay (yyaxis)
 ax1 = nexttile(tl, 1); hold(ax1,'on'); grid(ax1,'on');
+
+% Plot all data
 plot(ax1, t, I_cell, '-', 'Color', [0.8 0.3 0.1], 'LineWidth', 1.2);
+
+% Set xlim to show SOC1-1h to SOC2+1h range
+if ~isempty(Results)
+    min_time = t(min([Results.befChg])) - hours(1); % SOC1 - 1 hour (datetime)
+    max_time = t(max([Results.aftChg])) + hours(1); % SOC2 + 1 hour (datetime)
+    xlim(ax1, [min_time, max_time]);
+end
+
 title(ax1, 'Cell Current I_{cell} [A]'); xlabel(ax1,'Time'); ylabel(ax1,'I_{cell} [A]');
 ylim([-200 150]);
-for k = 1:size(chgSegs,1)
-    xs = [t(chgSegs(k,1)) t(chgSegs(k,2))];
-    area(ax1, xs, [max(I_cell) max(I_cell)], 'FaceColor',[0.9 0.95 1.0], 'EdgeColor','none', 'ShowBaseLine','off');
+% Add vertical dashed lines for SOC1, SOC2 time points
+for k = 1:numel(Results)
+    befChg = Results(k).befChg;
+    aftChg = Results(k).aftChg;
+    
+    % Vertical dashed line at SOC1 time point (befChg)
+    xline(ax1, t(befChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7);
+    
+    % Vertical dashed line at SOC2 time point (aftChg)
+    xline(ax1, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7);
 end
-uistack(findobj(ax1,'Type','line'),'top');
 % SOC overlay per charge segment (using only rest period SOC values)
 axes(ax1); yyaxis right; ylabel('SOC [%]');
 for k = 1:numel(Results)
@@ -223,15 +244,52 @@ if numel(ax1.YAxis)>=2, ax1.YAxis(2).Color = [0 0 0]; end
 
 % (2,1) Voltage (avg cell) with SOC overlay (yyaxis)
 ax2 = nexttile(tl, 3); hold(ax2,'on'); grid(ax2,'on');
+
+% Plot all data
 plot(ax2, t, Vcell_avg, '-', 'Color', [0.5 0.2 0.6], 'LineWidth', 1.2);
+
+% Set xlim to show SOC1-1h to SOC2+1h range
+if ~isempty(Results)
+    min_time = t(min([Results.befChg])) - hours(1); % SOC1 - 1 hour (datetime)
+    max_time = t(max([Results.aftChg])) + hours(1); % SOC2 + 1 hour (datetime)
+    xlim(ax2, [min_time, max_time]);
+end
+
 title(ax2, 'Average Cell Voltage V_{cell,avg} [V]'); xlabel(ax2,'Time'); ylabel(ax2,'V_{cell,avg} [V]');
 ylim([2.7 4.3]);
-for k = 1:size(chgSegs,1)
-    xs = [t(chgSegs(k,1)) t(chgSegs(k,2))];
-    area(ax2, xs, [max(Vcell_avg) max(Vcell_avg)], 'FaceColor',[0.95 0.95 0.9], 'EdgeColor','none', 'ShowBaseLine','off');
+% Add vertical dashed lines for SOC1, SOC2 time points
+for k = 1:numel(Results)
+    befChg = Results(k).befChg;
+    aftChg = Results(k).aftChg;
+    
+    % Vertical dashed line at SOC1 time point (befChg)
+    xline(ax2, t(befChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7);
+    
+    % Vertical dashed line at SOC2 time point (aftChg)
+    xline(ax2, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7);
 end
-uistack(findobj(ax2,'Type','line'),'top');
 
+% SOC overlay per charge segment (using only rest period SOC values)
+axes(ax2); yyaxis right; ylabel('SOC [%]');
+for k = 1:numel(Results)
+    cstart = Results(k).chg_start; cend = Results(k).chg_end;
+    befChg = Results(k).befChg; aftChg = Results(k).aftChg;
+    SOC1 = Results(k).SOC1; SOC2 = Results(k).SOC2;
+    
+    % Plot horizontal lines for rest period SOC values
+    % befChg to chg_start: constant SOC1
+    plot([t(befChg) t(cstart)], [SOC1 SOC1], '-', 'Color', [0.45 0.7 0.2], 'LineWidth', 3);
+    
+    % chg_start to chg_end: linear interpolation between SOC1 and SOC2
+    plot([t(cstart) t(cend)], [SOC1 SOC2], '-', 'Color', [0.45 0.7 0.2], 'LineWidth', 3);
+    
+    % chg_end to aftChg: constant SOC2
+    plot([t(cend) t(aftChg)], [SOC2 SOC2], '-', 'Color', [0.45 0.7 0.2], 'LineWidth', 3);
+    
+    % markers at rest periods (blue dots)
+    plot(t(befChg), SOC1, 'o', 'Color', [0 0 1], 'MarkerFaceColor',[0 0 1], 'MarkerSize', 8);
+    plot(t(aftChg), SOC2, 'o', 'Color', [0 0 1], 'MarkerFaceColor',[0 0 1], 'MarkerSize', 8);
+end
 yyaxis left;
 % unify axis colors to black
 ax2.XColor = [0 0 0]; if numel(ax2.YAxis)>=1, ax2.YAxis(1).Color = [0 0 0]; end
@@ -240,7 +298,7 @@ if numel(ax2.YAxis)>=2, ax2.YAxis(2).Color = [0 0 0]; end
 % Right column: summary table spanning both rows
 axTbl = nexttile(tl, 2, [2 1]);
 posTbl = axTbl.Position; delete(axTbl);
-varNames = {'Start','End','Rest1 [HH:MM:SS]','Rest2 [HH:MM:SS]','SOC1(EST)[%]','SOC2(EST)[%]','ΔSOC(EST)[%]','SOC1(BMS)[%]','SOC2(BMS)[%]','ΔSOC(BMS)[%]','Qmax(EST) [Ah]','Qmax(BMS) [Ah]','∫I dt [Ah]','OCV1[V]','OCV2[V]','I1[A]','I2[A]','SOH(EST) [%]','SOH(BMS) [%]'};
+varNames = {'Start','End','Rest1 [HH:MM:SS]','Rest2 [HH:MM:SS]','SOC1(EST)[%]','SOC2(EST)[%]','ΔSOC(EST)[%]','SOC1(Raw)[%]','SOC2(Raw)[%]','ΔSOC(Raw)[%]','Qmax(EST) [Ah]','Qmax(BMS) [Ah]','∫I dt [Ah]','OCV1[V]','OCV2[V]','I1[A]','I2[A]','SOH(Raw) [%]','SOH(EST) [%]','SOH(BMS) [%]'};
 numSeg = numel(Results);
 tblData = cell(numel(varNames), max(numSeg,1));
 colNames = cell(1, max(numSeg,1));
@@ -266,14 +324,23 @@ else
         tblData{15,s} = sprintf('%.4f', Results(s).V2);
         tblData{16,s} = sprintf('%.4f', Results(s).I1);
         tblData{17,s} = sprintf('%.4f', Results(s).I2);
-        tblData{18,s} = sprintf('%.4f', (Results(s).Qmax_cell_Ah/64)*100);
-        tblData{19,s} = sprintf('%.4f', SOH_end);
+        tblData{18,s} = sprintf('%.4f', SOH_end);
+        tblData{19,s} = sprintf('%.4f', (Results(s).Qmax_cell_Ah/64)*100);
+        tblData{20,s} = sprintf('%.4f', (Results(s).Qmax_cell_Ah_BMS/64)*100);
     end
 end
 uit = uitable(fig, 'Data', tblData, 'ColumnName', colNames, 'RowName', varNames, 'Units','normalized', 'Position', posTbl);
 uit.ColumnWidth = {300}; % 모든 컬럼 너비 통일
-uit.ColumnFormat = {'char', 'char', 'char', 'char', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric'}; % 컬럼 포맷
+uit.ColumnFormat = {'char', 'char', 'char', 'char', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric', 'numeric'}; % 컬럼 포맷
 set(findall(fig,'-property','FontSize'),'FontSize',12);
+
+% Save figure
+saveas(fig, 'FieldQmax/FieldQmax_Figure_2021.fig');
+
+% Save table data to mat file
+% Create table with proper variable names
+T = array2table(tblData', 'VariableNames', varNames, 'RowNames', colNames);
+save('FieldQmax/FieldQmax_Results_2021.mat', 'Results', 'T', 'tblData', 'varNames', 'colNames');
 
 %% Local function: find contiguous true segments
 function segs = local_find_segments(mask)
