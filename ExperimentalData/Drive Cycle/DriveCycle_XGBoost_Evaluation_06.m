@@ -398,7 +398,6 @@ title(sprintf('SOH Estimation Performance\nRMSE: %.3f Ah, R²: %.3f', overall_rm
 grid on;
 axis square;
 savefig(fullfile(figuresDir, 'Actual_vs_Estimated.fig'));
-saveas(fig1, fullfile(figuresDir, 'Actual_vs_Estimated.png'));
 close(fig1);
 fprintf('  Saved: Actual_vs_Estimated.fig\n');
 
@@ -529,7 +528,6 @@ if ~isempty(all_cycles) && length(all_cycles) == length(all_actuals) && ...
     end
     
     savefig(fullfile(figuresDir, 'Time_Series_Capacity_vs_Cycle.fig'));
-    saveas(fig_ts, fullfile(figuresDir, 'Time_Series_Capacity_vs_Cycle.png'));
     close(fig_ts);
     fprintf('  Saved: Time_Series_Capacity_vs_Cycle.fig\n');
 else
@@ -563,7 +561,6 @@ grid on;
 
 sgtitle('Model Error Analysis', 'FontSize', 16);
 savefig(fullfile(figuresDir, 'Residual_Analysis.fig'));
-saveas(fig2, fullfile(figuresDir, 'Residual_Analysis.png'));
 close(fig2);
 fprintf('  Saved: Residual_Analysis.fig\n');
 
@@ -633,7 +630,6 @@ xticks(1:n_folds);
 sgtitle(sprintf('XGBoost Model Evaluation - %s', targetVar), 'FontSize', 16);
 
 savefig(fullfile(figuresDir, 'XGBoost_Evaluation_Overall.fig'));
-saveas(gcf, fullfile(figuresDir, 'XGBoost_Evaluation_Overall.png'));
 fprintf('Saved: XGBoost_Evaluation_Overall.fig\n');
 close(gcf);
 
@@ -669,7 +665,6 @@ end
 sgtitle('Estimation vs Actual - Individual Folds', 'FontSize', 16);
 
 savefig(fullfile(figuresDir, 'XGBoost_Evaluation_ByFold.fig'));
-saveas(gcf, fullfile(figuresDir, 'XGBoost_Evaluation_ByFold.png'));
 fprintf('Saved: XGBoost_Evaluation_ByFold.fig\n');
 close(gcf);
 
@@ -713,8 +708,7 @@ if ~isempty(all_importance)
     title(sprintf('Top %d Feature Importance (Average across Folds)', n_top), 'FontSize', 14);
     grid on;
     
-    savefig(fullfile(figuresDir, 'XGBoost_FeatureImportance.fig'));
-    saveas(gcf, fullfile(figuresDir, 'XGBoost_FeatureImportance.png'));
+    savefig(fullfile(figuresDir, 'XGBoost_FeatureImportance.fig'));    
     fprintf('Saved: XGBoost_FeatureImportance.fig\n');
     close(gcf);
     

@@ -244,7 +244,6 @@ for f = 1:length(fold_definitions)
             mat2str(fold_results.(fold_name).test_channels)), 'FontSize', 16);
         
         savefig(fullfile(figuresDir, sprintf('Split_Dist_%s.fig', fold_name)));
-        saveas(fig, fullfile(figuresDir, sprintf('Split_Dist_%s.png', fold_name)));
         close(fig);
         fprintf('  Saved: Split_Dist_%s.fig\n', fold_name);
     end
@@ -355,7 +354,6 @@ text(0.5, 0.1, desc_text, 'FontSize', 12, 'HorizontalAlignment', 'center', ...
      'VerticalAlignment', 'top', 'BackgroundColor', 'white', 'EdgeColor', 'black');
 
 savefig(fullfile(figuresDir, 'Data_Split_Diagram.fig'));
-saveas(fig_diagram, fullfile(figuresDir, 'Data_Split_Diagram.png'));
 close(fig_diagram);
 fprintf('  Saved: Data_Split_Diagram.fig\n');
 

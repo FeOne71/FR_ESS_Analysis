@@ -36,7 +36,7 @@ targetVars = {'Capacity_C3', 'Capacity_OCV'};  % List of target variables to tra
 
 % Event Type Filtering (충전/방전 분리 모델링)
 % [방법 1] 충전 모델 만들 때
-targetEventType = 'Discharge'; 
+targetEventType = 'All'; 
 
 % [방법 2] 방전 모델 만들 때 (현재 방전 이벤트 데이터 없음)
 % targetEventType = 'Discharge';  % WARNING: No discharge events in data!
@@ -577,8 +577,7 @@ for targetIdx = 1:length(targetVars)
         ylabel('Features', 'FontSize', 12);
         title(sprintf('XGBoost Feature Importance (Fold %d)', fold_num), 'FontSize', 14);
         grid on;
-        savefig(fullfile(figuresDir, sprintf('Feature_Imp_Fold%d.fig', fold_num)));
-        saveas(fig, fullfile(figuresDir, sprintf('Feature_Imp_Fold%d.png', fold_num)));
+        savefig(fullfile(figuresDir, sprintf('Feature_Imp_Fold%d.fig', fold_num)));        
         close(fig);
         fprintf('  Saved: Feature_Imp_Fold%d.fig\n', fold_num);
     else

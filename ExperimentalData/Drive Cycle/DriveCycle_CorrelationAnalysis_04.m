@@ -4,7 +4,7 @@
 % 
 % 목적: 
 % - DriveCycle_Summary_Table.mat를 불러와서 상관분석 수행
-% - 6개 저항성분(R_1s, R_3s, R_5s, R_10s, R_30s, R_60s)과 용량(Capacity) 간의 상관관계 분석
+% - 6개 저항성분(R_1s, R_3s, R_5s, R_10s, R_30s, R_60s)과 용량(Capacity_C3) 간의 상관관계 분석
 % - 전체 통합 분석 (DC Profile 구분 없이)
 % - Pearson 상관계수 계산
 %
@@ -29,7 +29,7 @@ end
 
 %% Configuration - Analysis Settings
 % Event Type Selection
-targetEventType = 'Charge';  % 'All': both charge and discharge, 'Charge': only charge, 'Discharge': only discharge
+targetEventType = 'All';  % 'All': both charge and discharge, 'Charge': only charge, 'Discharge': only discharge
 
 %% Load Summary Table
 summaryTablePath = fullfile(inputDir, 'DriveCycle_Summary_Table.mat');
@@ -54,7 +54,7 @@ end
 fprintf('Unique DC Profiles: %s\n', strjoin(unique(summaryTable.DC_Profile), ', '));
 fprintf('Unique Channels: %s\n', mat2str(unique(summaryTable.Channel)'));
 fprintf('Unique Cycles: %s\n', mat2str(unique(summaryTable.Cycle)'));
-fprintf('Data range - Capacity: [%.2f, %.2f] Ah\n', min(summaryTable.Capacity), max(summaryTable.Capacity));
+fprintf('Data range - Capacity_C3: [%.2f, %.2f] Ah\n', min(summaryTable.Capacity_C3), max(summaryTable.Capacity_C3));
 
 % Data composition analysis
 fprintf('\n=== Data Composition Analysis ===\n');
@@ -112,7 +112,7 @@ fprintf('=== Outlier Removal (IQR Method, Cycle-wise) ===\n');
 fprintf('========================================\n');
 fprintf('Method: IQR (Interquartile Range) with 1.5 multiplier\n');
 fprintf('Applied: Separately for each Cycle\n');
-fprintf('Variables: All variables (Capacity, R_1s, R_3s, R_5s, R_10s, R_30s, R_60s)\n');
+fprintf('Variables: All variables (Capacity_C3, R_1s, R_3s, R_5s, R_10s, R_30s, R_60s)\n');
 fprintf('Criterion: Values outside [Q1 - 1.5*IQR, Q3 + 1.5*IQR] are considered outliers\n\n');
 
 % Store original data count
@@ -120,8 +120,8 @@ originalRowCount = height(summaryTable);
 fprintf('Original data rows: %d\n', originalRowCount);
 
 % Define variables for outlier removal
-variableNames = {'Capacity', 'R_1s', 'R_3s', 'R_5s', 'R_10s', 'R_30s', 'R_60s'};
-variableLabels = {'Capacity', 'Rchg 1s', 'Rchg 3s', 'Rchg 5s', 'Rchg 10s', 'Rchg 30s', 'Rchg 60s'};
+variableNames = {'Capacity_C3', 'R_1s', 'R_3s', 'R_5s', 'R_10s', 'R_30s', 'R_60s'};
+variableLabels = {'Capacity_C3', 'Rchg 1s', 'Rchg 3s', 'Rchg 5s', 'Rchg 10s', 'Rchg 30s', 'Rchg 60s'};
 
 % Check which variables exist
 availableVarsForOutlier = {};
@@ -231,10 +231,10 @@ fprintf('  Rows removed: %d (%.2f%%)\n', ...
 fprintf('========================================\n');
 
 %% Define variables for correlation matrix
-% All variables: Capacity, R_1s, R_3s, R_5s, R_10s, R_30s, R_60s
+% All variables: Capacity_C3, R_1s, R_3s, R_5s, R_10s, R_30s, R_60s
 % Note: Using outlier-removed data
-variableNames = {'Capacity', 'R_1s', 'R_3s', 'R_5s', 'R_10s', 'R_30s', 'R_60s'};
-variableLabels = {'Capacity', 'Rchg 1s', 'Rchg 3s', 'Rchg 5s', 'Rchg 10s', 'Rchg 30s', 'Rchg 60s'};
+variableNames = {'Capacity_C3', 'R_1s', 'R_3s', 'R_5s', 'R_10s', 'R_30s', 'R_60s'};
+variableLabels = {'Capacity_C3', 'Rchg 1s', 'Rchg 3s', 'Rchg 5s', 'Rchg 10s', 'Rchg 30s', 'Rchg 60s'};
 
 %% Correlation Matrix Analysis
 fprintf('\n\n========================================\n');
@@ -591,24 +591,24 @@ if strongCount == 0
     fprintf('No strong correlations found (|r| > 0.7)\n');
 end
 
-%% Capacity vs Rchg Correlations (Most Important)
+%% Capacity_C3 vs Rchg Correlations (Most Important)
 fprintf('\n\n========================================\n');
-fprintf('=== Capacity vs Rchg Correlations ===\n');
+fprintf('=== Capacity_C3 vs Rchg Correlations ===\n');
 fprintf('========================================\n');
-capacityIdx = find(strcmp(availableVars, 'Capacity'));
-if ~isempty(capacityIdx)
+Capacity_C3Idx = find(strcmp(availableVars, 'Capacity_C3'));
+if ~isempty(Capacity_C3Idx)
     fprintf('Pearson Correlation:\n');
     fprintf('%-15s %8s %8s %12s %15s %8s\n', ...
         'Rchg Interval', 'R', 'R²', 'p-value', '95%% CI', 'Sig');
     fprintf('%s\n', repmat('-', 1, 70));
     
     for idx = 1:length(availableVars)
-        if idx ~= capacityIdx
-            r = corrMatrix(capacityIdx, idx);
+        if idx ~= Capacity_C3Idx
+            r = corrMatrix(Capacity_C3Idx, idx);
             r_squared = r^2;
-            p = pValueMatrix(capacityIdx, idx);
-            ci_low = ciLowerMatrix(capacityIdx, idx);
-            ci_up = ciUpperMatrix(capacityIdx, idx);
+            p = pValueMatrix(Capacity_C3Idx, idx);
+            ci_low = ciLowerMatrix(Capacity_C3Idx, idx);
+            ci_up = ciUpperMatrix(Capacity_C3Idx, idx);
             
             % Determine significance
             if p < 0.001
@@ -632,12 +632,12 @@ if ~isempty(capacityIdx)
     fprintf('%s\n', repmat('-', 1, 70));
     
     for idx = 1:length(availableVars)
-        if idx ~= capacityIdx
-            r = R_spearman(capacityIdx, idx);
+        if idx ~= Capacity_C3Idx
+            r = R_spearman(Capacity_C3Idx, idx);
             r_squared = r^2;
-            p = P_spearman(capacityIdx, idx);
-            ci_low = ciLowerMatrix_spearman(capacityIdx, idx);
-            ci_up = ciUpperMatrix_spearman(capacityIdx, idx);
+            p = P_spearman(Capacity_C3Idx, idx);
+            ci_low = ciLowerMatrix_spearman(Capacity_C3Idx, idx);
+            ci_up = ciUpperMatrix_spearman(Capacity_C3Idx, idx);
             
             % Determine significance
             if p < 0.001
@@ -655,13 +655,13 @@ if ~isempty(capacityIdx)
         end
     end
     
-    fprintf('\nComparison (Capacity vs Rchg):\n');
+    fprintf('\nComparison (Capacity_C3 vs Rchg):\n');
     fprintf('%-15s %12s %12s %12s\n', 'Rchg Interval', 'Pearson R', 'Spearman ρ', 'Difference');
     fprintf('%s\n', repmat('-', 1, 55));
     for idx = 1:length(availableVars)
-        if idx ~= capacityIdx
-            pearson_r = corrMatrix(capacityIdx, idx);
-            spearman_r = R_spearman(capacityIdx, idx);
+        if idx ~= Capacity_C3Idx
+            pearson_r = corrMatrix(Capacity_C3Idx, idx);
+            spearman_r = R_spearman(Capacity_C3Idx, idx);
             diff = abs(spearman_r - pearson_r);
             fprintf('%-15s %12.4f %12.4f %12.4f\n', ...
                 availableLabels{idx}, pearson_r, spearman_r, diff);
@@ -677,8 +677,8 @@ fprintf('설명: Pairwise Deletion 방식을 사용합니다.\n');
 fprintf('각 변수 쌍별로 유효한 데이터만 사용하므로, R_60s가 없어도 R_1s 분석에는 영향 없음.\n\n');
 fprintf('필터링된 테이블 총 행 수: %d\n', height(summaryTable));
 
-% Find Capacity index for later use
-capacityIdx = find(strcmp(availableVars, 'Capacity'));
+% Find Capacity_C3 index for later use
+Capacity_C3Idx = find(strcmp(availableVars, 'Capacity_C3'));
 
 % Check for each variable
 fprintf('\n변수별 결측치 현황:\n');
@@ -695,22 +695,22 @@ end
 % Explain why some rows are excluded
 fprintf('\n[참고] Pairwise Deletion 방식:\n');
 fprintf('- 각 변수 쌍별로 유효한 데이터만 사용하여 상관계수를 계산합니다.\n');
-fprintf('- 예: Capacity vs R_1s는 R_1s가 있는 모든 행을 사용 (R_60s가 없어도 OK)\n');
-fprintf('- 예: Capacity vs R_60s는 R_60s가 있는 행만 사용\n');
+fprintf('- 예: Capacity_C3 vs R_1s는 R_1s가 있는 모든 행을 사용 (R_60s가 없어도 OK)\n');
+fprintf('- 예: Capacity_C3 vs R_60s는 R_60s가 있는 행만 사용\n');
 fprintf('- 이 방식으로 데이터 손실을 최소화합니다.\n');
-if ~isempty(capacityIdx)
+if ~isempty(Capacity_C3Idx)
     fprintf('\n변수 쌍별 샘플 크기:\n');
     r1sIdx = find(strcmp(availableVars, 'R_1s'));
     if ~isempty(r1sIdx)
-        fprintf('  Capacity vs R_1s: %d개\n', nMatrix(capacityIdx, r1sIdx));
+        fprintf('  Capacity_C3 vs R_1s: %d개\n', nMatrix(Capacity_C3Idx, r1sIdx));
     end
     if ismember('R_60s', availableVars)
         r60sIdx = find(strcmp(availableVars, 'R_60s'));
         if ~isempty(r60sIdx)
-            fprintf('  Capacity vs R_60s: %d개\n', nMatrix(capacityIdx, r60sIdx));
+            fprintf('  Capacity_C3 vs R_60s: %d개\n', nMatrix(Capacity_C3Idx, r60sIdx));
             if ~isempty(r1sIdx)
                 fprintf('  → R_60s가 없는 %d개 행도 R_1s 분석에 사용됨\n', ...
-                    nMatrix(capacityIdx, r1sIdx) - nMatrix(capacityIdx, r60sIdx));
+                    nMatrix(Capacity_C3Idx, r1sIdx) - nMatrix(Capacity_C3Idx, r60sIdx));
             end
         end
     end
@@ -959,26 +959,26 @@ fprintf('\nResults saved to: %s\n', savePath);
     saveas(fig_spearman, savePath_fig_spearman);
     fprintf('Saved: %s\n', savePath_fig_spearman);
     
-    %% Create Scatter Plots: Capacity vs Rchg (with regression line)
-    fprintf('\n=== Creating Scatter Plots: Capacity vs Rchg ===\n');
+    %% Create Scatter Plots: Capacity_C3 vs Rchg (with regression line)
+    fprintf('\n=== Creating Scatter Plots: Capacity_C3 vs Rchg ===\n');
     
-    % Find Capacity index
-    capacityIdx = find(strcmp(availableVars, 'Capacity'));
-    if isempty(capacityIdx)
-        fprintf('WARNING: Capacity variable not found. Skipping scatter plots.\n');
+    % Find Capacity_C3 index
+    Capacity_C3Idx = find(strcmp(availableVars, 'Capacity_C3'));
+    if isempty(Capacity_C3Idx)
+        fprintf('WARNING: Capacity_C3 variable not found. Skipping scatter plots.\n');
     else
         % Create scatter plots for each Rchg interval
         for idx = 1:length(availableVars)
-            if idx == capacityIdx
-                continue;  % Skip Capacity vs Capacity
+            if idx == Capacity_C3Idx
+                continue;  % Skip Capacity_C3 vs Capacity_C3
             end
             
             rchgVar = availableVars{idx};
             rchgLabel = availableLabels{idx};
             
             % Extract valid pairs (pairwise deletion)
-            validMask = ~isnan(dataMatrix(:, capacityIdx)) & ~isnan(dataMatrix(:, idx));
-            capData = dataMatrix(validMask, capacityIdx);
+            validMask = ~isnan(dataMatrix(:, Capacity_C3Idx)) & ~isnan(dataMatrix(:, idx));
+            capData = dataMatrix(validMask, Capacity_C3Idx);
             rchgData = dataMatrix(validMask, idx);
             
             if length(capData) < 3
@@ -997,7 +997,7 @@ fprintf('\nResults saved to: %s\n', savePath);
             y_fit = polyval(p_fit, capData);
             
             % Create figure
-            fig_scatter = figure('Name', sprintf('Capacity vs %s%s', rchgLabel, eventTypeLabel), ...
+            fig_scatter = figure('Name', sprintf('Capacity_C3 vs %s%s', rchgLabel, eventTypeLabel), ...
                                 'Position', [100, 100, 800, 600], 'Visible', 'on');
             
             % Get Cycle and Channel information for coloring
@@ -1024,9 +1024,9 @@ fprintf('\nResults saved to: %s\n', savePath);
             plot(capData_sorted, y_fit_sorted, 'k--', 'LineWidth', 2, 'DisplayName', 'Linear Fit');
             
             % Labels and title
-            xlabel('Capacity (Ah)', 'FontSize', 12, 'FontWeight', 'bold');
+            xlabel('Capacity_C3 (Ah)', 'FontSize', 12, 'FontWeight', 'bold');
             ylabel(sprintf('%s (mΩ)', rchgLabel), 'FontSize', 12, 'FontWeight', 'bold');
-            title(sprintf('Capacity vs %s%s\n(IQR Outlier Removal Applied)', rchgLabel, eventTypeLabel), ...
+            title(sprintf('Capacity_C3 vs %s%s\n(IQR Outlier Removal Applied)', rchgLabel, eventTypeLabel), ...
                   'FontSize', 14, 'FontWeight', 'bold');
             
             % Add statistics text
@@ -1058,7 +1058,7 @@ fprintf('\nResults saved to: %s\n', savePath);
             hold off;
             
             % Save figure
-            savePath_scatter = fullfile(figuresDir, sprintf('Scatter_Capacity_vs_%s%s.fig', ...
+            savePath_scatter = fullfile(figuresDir, sprintf('Scatter_Capacity_C3_vs_%s%s.fig', ...
                 strrep(rchgLabel, ' ', '_'), eventTypeLabel));
             saveas(fig_scatter, savePath_scatter);
             fprintf('  Saved: %s (n=%d, R=%.4f, R²=%.4f, p=%.4e)\n', ...
