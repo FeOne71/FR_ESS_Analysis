@@ -29,16 +29,16 @@ Ns = 17*14;                    % series strings per rack (238s)
 Np = 2;                        % parallel strings per rack (2p)
 
 %% Paths
-dataFile = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\2021\202106\Raw_20210607.mat';
+dataFile = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\Old\2021\202106\Raw_20210607.mat';
 saveDir  = 'D:\JCW\Projects\KEPCO_ESS_Local\FieldData\FieldData_Rack_DCIR\FieldData_RPT_results';
 if ~exist(saveDir,'dir'); mkdir(saveDir); end
 
 %% Load
 S = load(dataFile);            % loads Raw_Rack
-if ~isfield(S,'Raw_Rack')
+if ~isfield(S,'Raw')
     error('Raw_Rack not found in %s', dataFile);
 end
-Raw_Rack = S.Raw_Rack;
+Raw_Rack = S.Raw;
 
 %% Rack list
 rackNames = {'Rack01','Rack02','Rack03','Rack04','Rack05','Rack06','Rack07','Rack08'};

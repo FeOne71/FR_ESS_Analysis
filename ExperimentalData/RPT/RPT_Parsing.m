@@ -11,8 +11,8 @@ dataDir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\R
 outDir  = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\Parsed';
 if ~exist(outDir,'dir'); mkdir(outDir); end
 
-channels = {'Ch9','Ch10','Ch11','Ch12','Ch13','Ch14','Ch15','Ch16'};
-rptCycles = {'0cyc','200cyc','400cyc'};
+channels  = {'Ch09','Ch10','Ch11','Ch12','Ch13','Ch14','Ch15','Ch16'};
+rptCycles = {'0cyc','200cyc','400cyc','600cyc','800cyc'}; 
 I_1C = 64; % [A]
 
 %% Parse per channel and cycle
