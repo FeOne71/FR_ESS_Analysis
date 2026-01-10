@@ -1,0 +1,155 @@
+#Application: JXR BSC 1.8.1.1
+#Release Date: 20210916
+#Modbus Model: C2C Model
+[2023-06-28 20:25:53.377] [Controller] Controller Model - C2C (STD Base)
+[2023-06-28 20:25:53.392] [Controller] The Modbus port is opened successfully.
+[2023-06-28 20:26:17.654] [BSC] The Main controller is connected. - IP: 10.10.102.71:49822 (2172), The number of clients - 1
+[2023-06-28 20:26:17.761] [BSC] BSC opens the CAN channel successfully.
+[2023-06-28 20:26:17.762] [BSC] The BSC starts initializing the BMS.
+[2023-06-28 20:26:17.762] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2023-06-28 20:26:17.763] [Sensor#2] Connect with the Temperature/Humidity Sensor successfully.
+[2023-06-28 20:26:17.793] [BSC] The Main controller is connected. - IP: 10.10.102.71:49819 (2348), The number of clients - 2
+[2023-06-28 20:26:17.793] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49819 (2348), The number of clients - 1
+[2023-06-28 20:26:18.397] [BSC] The Main controller is connected. - IP: 10.10.102.71:49813 (2484), The number of clients - 2
+[2023-06-28 20:26:18.398] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49813 (2484), The number of clients - 1
+[2023-06-28 20:26:18.696] [BSC] The Main controller is connected. - IP: 10.10.102.71:49820 (2500), The number of clients - 2
+[2023-06-28 20:26:18.696] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49820 (2500), The number of clients - 1
+[2023-06-28 20:26:19.292] [BSC] The Main controller is connected. - IP: 10.10.102.71:49814 (2348), The number of clients - 2
+[2023-06-28 20:26:19.293] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49814 (2348), The number of clients - 1
+[2023-06-28 20:26:19.602] [BSC] The Main controller is connected. - IP: 10.10.102.71:49821 (2512), The number of clients - 2
+[2023-06-28 20:26:19.602] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49821 (2512), The number of clients - 1
+[2023-06-28 20:26:19.781] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:49197 (2516), The number of clients - 2
+[2023-06-28 20:26:19.870] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:19.880] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:20.197] [BSC] The Main controller is connected. - IP: 10.10.102.71:49815 (2524), The number of clients - 3
+[2023-06-28 20:26:20.197] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49815 (2524), The number of clients - 2
+[2023-06-28 20:26:20.887] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:20.897] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:21.095] [BSC] The Main controller is connected. - IP: 10.10.102.71:49816 (2512), The number of clients - 3
+[2023-06-28 20:26:21.095] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49816 (2512), The number of clients - 2
+[2023-06-28 20:26:21.899] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:21.909] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:21.992] [BSC] The Main controller is connected. - IP: 10.10.102.71:49817 (2532), The number of clients - 3
+[2023-06-28 20:26:21.993] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49817 (2532), The number of clients - 2
+[2023-06-28 20:26:22.893] [BSC] The Main controller is connected. - IP: 10.10.102.71:49818 (2540), The number of clients - 3
+[2023-06-28 20:26:22.893] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:49818 (2540), The number of clients - 2
+[2023-06-28 20:26:22.919] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:22.929] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:23.941] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:23.951] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:24.955] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:24.966] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:25.970] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:25.980] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:26.190] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:26.990] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:26:27.000] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:26:27.207] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:28.000] [BSC] BMS ID configuration is completed.
+[2023-06-28 20:26:28.000] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2023-06-28 20:26:28.219] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:29.237] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:30.259] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:31.275] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:32.291] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:33.309] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2023-06-28 20:26:39.390] [BSC] Loss of Comm.: BSC - Controller.
+[2023-06-28 20:26:43.001] [BSC] The BSC is getting the BMS version information.
+[2023-06-28 20:26:43.019] [Rack#01] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.037] [Rack#02] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.059] [Rack#03] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.077] [Rack#04] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.099] [Rack#05] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.113] [Rack#06] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.129] [Rack#07] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:43.148] [Rack#08] The BSC receives all the RBMS version information.
+[2023-06-28 20:26:47.160] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2023-06-28 20:27:07.161] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2023-06-28 20:27:20.780] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-28 20:27:20.780] [PLC#1] Alarm: DC Disconnect Switch is open.
+[2023-06-28 20:27:20.780] [PLC#1] Alarm: HVAC Error.
+[2023-06-28 20:27:20.780] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-28 20:27:23.389] [BSC] Loss of Comm.: BSC - Controller released.
+[2023-06-28 20:32:40.626] [BSC] Stop monitoring the battery section.
+[2023-06-28 20:32:42.782] [BSC] BSC closes the CAN channel successfully.
+[2023-06-28 20:32:42.835] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-28 20:32:42.835] [PLC#1] Alarm: DC Disconnect Switch is open.
+[2023-06-28 20:32:42.836] [PLC#1] Alarm: HVAC Error.
+[2023-06-28 20:32:42.836] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-28 20:32:48.737] [BSC] BSC opens the CAN channel successfully.
+[2023-06-28 20:32:48.740] [BSC] The BSC starts initializing the BMS.
+[2023-06-28 20:32:48.740] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2023-06-28 20:32:49.751] [Sensor#2] Cannot connect with the Temperature/Humidity Sensor.
+[2023-06-28 20:32:50.845] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:50.855] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:51.860] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:51.870] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:52.874] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:52.884] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:53.894] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:53.904] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:54.915] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:54.925] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:55.936] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:55.946] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:56.956] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:56.966] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:57.166] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2023-06-28 20:32:57.973] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2023-06-28 20:32:57.983] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2023-06-28 20:32:58.181] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2023-06-28 20:32:58.984] [BSC] BMS ID configuration is completed.
+[2023-06-28 20:32:58.984] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2023-06-28 20:32:59.195] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:00.214] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:01.234] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:02.257] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:03.276] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:04.294] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2023-06-28 20:33:13.985] [BSC] The BSC is getting the BMS version information.
+[2023-06-28 20:33:14.004] [Rack#01] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.020] [Rack#02] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.034] [Rack#03] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.052] [Rack#04] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.074] [Rack#05] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.096] [Rack#06] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.116] [Rack#07] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:14.132] [Rack#08] The BSC receives all the RBMS version information.
+[2023-06-28 20:33:18.148] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2023-06-28 20:33:27.396] [BSC] Alarm : External Temperature / Humidity Sensor LOC.
+[2023-06-28 20:33:27.397] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC.
+[2023-06-28 20:33:37.396] [BSC] Warning : External Temperature / Humidity Sensor LOC.
+[2023-06-28 20:33:38.148] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2023-06-28 20:33:49.390] [BSC] Alarm : External Temperature / Humidity Sensor LOC released.
+[2023-06-28 20:33:49.391] [BSC] Warning : External Temperature / Humidity Sensor LOC released.
+[2023-06-28 20:33:49.391] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC released.
+[2023-06-28 20:41:50.148] [PLC#1] Alarm: DC Disconnect Switch is open released.
+[2023-06-28 21:30:07.126] [BSC] Controller Request : Close all main contactors.
+[2023-06-28 21:30:08.127] [BSC] Start BMS contactor control.
+[2023-06-28 21:30:08.127] [Rack#01] Contactor Control Standard Rack Voltage: 912.1V, The number of racks can become online: 8ea
+[2023-06-28 21:30:09.427] [Rack#01] The precharge contactor is closed.
+[2023-06-28 21:30:10.427] [Rack#02] The precharge contactor is closed.
+[2023-06-28 21:30:11.427] [Rack#03] The precharge contactor is closed.
+[2023-06-28 21:30:12.427] [Rack#04] The precharge contactor is closed.
+[2023-06-28 21:30:13.427] [Rack#05] The precharge contactor is closed.
+[2023-06-28 21:30:14.427] [Rack#06] The precharge contactor is closed.
+[2023-06-28 21:30:15.427] [Rack#07] The precharge contactor is closed.
+[2023-06-28 21:30:16.427] [Rack#08] The precharge contactor is closed.
+[2023-06-28 21:30:19.427] [Rack#01] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:20.427] [Rack#02] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:21.427] [Rack#03] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:22.427] [Rack#04] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:23.427] [Rack#05] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:24.427] [Rack#06] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:25.427] [Rack#07] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:26.427] [Rack#08] The precharge contactor and the main contactor is closed.
+[2023-06-28 21:30:28.427] [Rack#01] The precharge contactor is opened.
+[2023-06-28 21:30:29.427] [Rack#02] The precharge contactor is opened.
+[2023-06-28 21:30:30.427] [Rack#03] The precharge contactor is opened.
+[2023-06-28 21:30:31.426] [Rack#04] The precharge contactor is opened.
+[2023-06-28 21:30:32.426] [Rack#05] The precharge contactor is opened.
+[2023-06-28 21:30:33.427] [Rack#06] The precharge contactor is opened.
+[2023-06-28 21:30:34.427] [Rack#07] The precharge contactor is opened.
+[2023-06-28 21:30:35.427] [Rack#08] The precharge contactor is opened.
+[2023-06-28 21:30:37.433] [BSC] The contactor control is completed.
+[2023-06-28 22:32:40.566] [PLC#1] Alarm: UPS Operation (Outage).

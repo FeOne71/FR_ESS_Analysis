@@ -18,7 +18,9 @@ clear; clc; close all;
 % =========================================================================
 % 데이터 경로 설정
 dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\Drive Cycle\parsed_data';
-outputDir = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\Drive Cycle\Events Analysis v01';
+% 현재 스크립트가 있는 폴더의 Results 폴더에 저장
+scriptDir = fileparts(mfilename('fullpath'));
+outputDir = fullfile(scriptDir, 'Results');
 if ~exist(outputDir, 'dir')
     mkdir(outputDir);
 end
@@ -1239,6 +1241,140 @@ for cycleIdx = 1:length(cycleTypes)
                     target_struct.(soc_level).(profile_name).(evtName).I_range = current_range;  % Current range (max-min) in stable window [A] (Chg: points 3-12, Dchg: points 2-12)
                     target_struct.(soc_level).(profile_name).(evtName).I_CV = current_CV;        % Coefficient of variation (std/mean) in stable window (Chg: points 3-12, Dchg: points 2-12)
                     target_struct.(soc_level).(profile_name).(evtName).P_std = power_std;
+                    
+                    %% === [NEW] Paper-based Feature Extraction ===
+                    % 논문에서 제시한 16개 + a 특징 추출
+                    
+                    % 1. 기본 데이터 준비
+                    % 시간 및 용량 계산
+                    t_rel = t_seg - t_seg(1); % 상대 시간 (0부터 시작)
+                    Q_seg = cumtrapz(t_rel, I_seg) / 3600; % [Ah] 누적 용량 변화
+                    
+                    % 노이즈 제거 (dQ/dV 계산을 위해 필수)
+                    % Window size는 데이터 길이에 따라 유동적으로 (최소 5포인트)
+                    smooth_window = max(5, round(length(V_seg)/20)); 
+                    V_smooth = smoothdata(V_seg, 'gaussian', smooth_window);
+                    Q_smooth = smoothdata(Q_seg, 'gaussian', smooth_window);
+                    
+                    % 2. dQ/dV 계산 (미분)
+                    dQ = diff(Q_smooth);
+                    dV = diff(V_smooth);
+                    
+                    % dV가 0에 가까우면 Inf 발생하므로 처리
+                    valid_diff = abs(dV) > 1e-5; 
+                    if sum(valid_diff) > 5
+                        dQdV = dQ(valid_diff) ./ dV(valid_diff);
+                    else
+                        dQdV = zeros(size(dQ)); % 예외 처리
+                    end
+                    
+                    % --- Feature Group A: Geometric (기하학적 특징) ---
+                    feat_Time = t_rel(end); % 충전/방전 지속 시간
+                    feat_EOCV = V_seg(end); % 종료 전압
+                    feat_CapThroughput = abs(Q_seg(end)); % 총 처리 용량
+                    
+                    % Slope (기울기 계산 - Linear Fit)
+                    if length(t_rel) > 1
+                        p_V = polyfit(t_rel, V_seg, 1);
+                        feat_Slope_V = p_V(1); % 전압 기울기
+                        
+                        p_I = polyfit(t_rel, I_seg, 1);
+                        feat_Slope_I = p_I(1); % 전류 기울기 (CC가 아닌 경우 중요)
+                    else
+                        feat_Slope_V = 0; feat_Slope_I = 0;
+                    end
+                    
+                    % --- Feature Group B: Statistics (통계적 특징) ---
+                    % 전압(V) 분포 특성
+                    feat_Mean_V = mean(V_seg);
+                    feat_Var_V = var(V_seg);
+                    feat_Skew_V = skewness(V_seg);
+                    feat_Kurt_V = kurtosis(V_seg);
+                    
+                    % 전류(I) 분포 특성 (FR 패턴의 격렬함 반영)
+                    feat_Mean_I = mean(I_seg);
+                    feat_Var_I = var(I_seg);
+                    feat_Skew_I = skewness(I_seg);
+                    feat_Kurt_I = kurtosis(I_seg);
+                    
+                    % 용량 변화(Delta Q) 분포 특성
+                    feat_Skew_Q = skewness(Q_seg);
+                    feat_Kurt_Q = kurtosis(Q_seg);
+                    
+                    % --- Feature Group C: Electrochemical (dQ/dV 통계) ---
+                    % 논문의 핵심: Peak를 찾는게 아니라 분포를 본다
+                    if ~isempty(dQdV) && sum(~isinf(dQdV)) > 0
+                        valid_dQdV = dQdV(~isinf(dQdV));
+                        feat_Mean_dQdV = mean(valid_dQdV);
+                        feat_Var_dQdV = var(valid_dQdV); % **핵심**: 노화될수록 뭉개짐(Variance 변화)
+                        feat_Skew_dQdV = skewness(valid_dQdV);
+                        feat_Kurt_dQdV = kurtosis(valid_dQdV);
+                    else
+                        feat_Mean_dQdV=NaN; feat_Var_dQdV=NaN; 
+                        feat_Skew_dQdV=NaN; feat_Kurt_dQdV=NaN;
+                    end
+
+                    % --- [Struct 저장] ---
+                    % target_struct에 필드 추가
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Time = feat_Time;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_EOCV = feat_EOCV;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Cap = feat_CapThroughput;
+                    
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Slope_V = feat_Slope_V;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Slope_I = feat_Slope_I;
+                    
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Mean_V = feat_Mean_V;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Var_V = feat_Var_V;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Skew_V = feat_Skew_V;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Kurt_V = feat_Kurt_V;
+                    
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Mean_I = feat_Mean_I;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Var_I = feat_Var_I;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Skew_I = feat_Skew_I;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Kurt_I = feat_Kurt_I;
+                    
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Skew_Q = feat_Skew_Q;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Kurt_Q = feat_Kurt_Q;
+                    
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Mean_dQdV = feat_Mean_dQdV;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Var_dQdV = feat_Var_dQdV;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Skew_dQdV = feat_Skew_dQdV;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Kurt_dQdV = feat_Kurt_dQdV;
+                    
+                    %% [추가] dV/dQ Features (방전 데이터 맞춤)
+                    % 논문의 DV Analysis (Differential Voltage) 적용
+                    % 방전 평탄 구간(Plateau)에서 dQ/dV보다 훨씬 안정적입니다.
+                    
+                    % dV/dQ 계산 (분모가 용량 변화량이므로 0이 될 확률이 매우 낮음)
+                    % dQ가 0인 경우(충전 멈춤)만 예외 처리
+                    valid_dQ = abs(dQ) > 1e-6;
+                    
+                    if sum(valid_dQ) > 5
+                        dVdQ = dV(valid_dQ) ./ dQ(valid_dQ);
+                        
+                        % 이상치 제거 (너무 큰 값은 잘라냄 - Clipping)
+                        % dV/dQ는 저항과 유사하므로 수천 단위로 튀면 안 됩니다.
+                        limit_val = 50; 
+                        dVdQ(dVdQ > limit_val) = limit_val;
+                        dVdQ(dVdQ < -limit_val) = -limit_val;
+                        
+                        % 통계량 추출
+                        feat_Mean_dVdQ = mean(dVdQ);
+                        feat_Var_dVdQ = var(dVdQ);       % 저항 변동성 (핵심 지표)
+                        feat_Skew_dVdQ = skewness(dVdQ); % 저항 증가 패턴의 치우침
+                        feat_Kurt_dVdQ = kurtosis(dVdQ);
+                    else
+                        feat_Mean_dVdQ = NaN; feat_Var_dVdQ = NaN;
+                        feat_Skew_dVdQ = NaN; feat_Kurt_dVdQ = NaN;
+                    end
+                    
+                    % --- [Struct 저장] ---
+                    % dV/dQ (DV Analysis)
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Mean_dVdQ = feat_Mean_dVdQ;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Var_dVdQ = feat_Var_dVdQ;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Skew_dVdQ = feat_Skew_dVdQ;
+                    target_struct.(soc_level).(profile_name).(evtName).Feat_Kurt_dVdQ = feat_Kurt_dVdQ;
+                    
                     for dt_idx = 1:length(dt_list)
                         dt_sec = dt_list(dt_idx);
                         if length(t_seg) > 1

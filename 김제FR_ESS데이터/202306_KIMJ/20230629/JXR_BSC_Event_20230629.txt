@@ -1,0 +1,58 @@
+#Application: JXR BSC 1.8.1.1
+#Release Date: 20210916
+#Modbus Model: C2C Model
+[2023-06-29 00:41:43.599] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 01:14:28.370] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 12:02:43.167] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 12:21:54.609] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 12:50:51.460] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-29 12:59:56.835] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 13:04:40.031] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 13:10:07.228] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 13:10:10.233] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 13:10:29.261] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 13:10:32.265] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 13:18:19.474] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 13:26:15.719] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 13:47:49.403] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 13:48:04.402] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 13:48:39.443] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-29 13:49:26.469] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 13:51:18.544] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 13:54:09.652] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 14:04:41.871] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 14:17:58.492] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 14:19:07.532] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 14:19:59.569] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 14:26:21.759] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 14:35:02.139] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 14:37:51.299] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 14:38:17.321] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 14:46:09.536] [PLC#1] Alarm: UPS Operation (Outage) released.
+[2023-06-29 14:57:09.715] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 15:02:00.847] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-29 15:06:59.090] [PLC#1] Alarm: SPLC-BSC Comm Loss.
+[2023-06-29 15:07:31.260] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:49155 (908), The number of clients - 3
+[2023-06-29 15:07:32.099] [PLC#1] Alarm: SPLC-BSC Comm Loss released.
+[2023-06-29 15:07:32.100] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 15:07:32.100] [PLC#1] Alarm: MPLC-SPLC Comm Loss.
+[2023-06-29 15:07:32.100] [PLC#1] Alarm: HVAC Error released.
+[2023-06-29 15:07:48.122] [BSC] The PLC #1 has not requested for several seconds, so it'll be disconnected. - IP: 10.10.102.201:49197 (2516)
+[2023-06-29 15:07:48.123] [BSC] The PLC #1 is disconnected. - IP: 10.10.102.201:49197 (2516), The number of clients - 2
+[2023-06-29 15:07:49.127] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-29 15:07:49.128] [PLC#1] Alarm: MPLC-SPLC Comm Loss released.
+[2023-06-29 15:07:59.122] [PLC#1] Alarm: HVAC Error.
+[2023-06-29 15:08:22.130] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 15:12:38.199] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 15:24:30.478] [PLC#1] Alarm: HMI-MPLC Comm Loss.
+[2023-06-29 15:25:36.531] [PLC#1] Alarm: UPS Operation (Outage).
+[2023-06-29 15:27:12.571] [PLC#1] Alarm: HMI-MPLC Comm Loss released.
+[2023-06-29 15:37:43.135] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 15:47:30.428] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 16:55:16.441] [PLC#1] Alarm: HVAC Error released.
+[2023-06-29 16:56:06.456] [PLC#1] Alarm: HVAC Error.
+[2023-06-29 19:50:02.752] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 21:26:01.481] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 22:47:10.947] [PLC#1] Alarm: HVAC Uncontrollable released.
+[2023-06-29 22:58:33.181] [PLC#1] Alarm: HVAC Uncontrollable.
+[2023-06-29 23:19:01.758] [PLC#1] Alarm: HVAC Uncontrollable released.

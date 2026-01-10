@@ -1,0 +1,51 @@
+#Application: JXR BSC 1.7.6.4
+#Release Date: 20200813
+#Modbus Model: C2C Model
+[2021-06-03 16:15:19.280] [Controller] Controller Model - C2C (STD Base)
+[2021-06-03 16:15:19.280] [Controller] The Modbus port is opened successfully.
+[2021-06-03 16:15:19.953] [BSC] The Main controller is connected. - IP: 10.10.102.71:51170 (1840), The number of clients - 1
+[2021-06-03 16:15:20.060] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 16:15:20.063] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 16:15:20.063] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 16:15:20.063] [Sensor#2] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 16:15:20.063] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:51170 (1840), The number of clients - 0
+[2021-06-03 16:15:20.075] [BSC] The Main controller is connected. - IP: 10.10.102.71:51170 (1784), The number of clients - 1
+[2021-06-03 16:15:20.076] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:50563 (1868), The number of clients - 2
+[2021-06-03 16:15:22.179] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:22.189] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:23.199] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:23.209] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:24.221] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:24.231] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:25.234] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:25.244] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:26.254] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:26.264] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:27.273] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:27.282] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:28.292] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:28.302] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:28.499] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:29.308] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:15:29.318] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:15:29.520] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:30.318] [BSC] BMS ID configuration is completed.
+[2021-06-03 16:15:30.318] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2021-06-03 16:15:30.541] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:31.556] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:32.574] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:33.592] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:34.611] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:35.627] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2021-06-03 16:15:43.239] [BSC] Login : Administrator
+[2021-06-03 16:15:45.319] [BSC] The BSC is getting the BMS version information.
+[2021-06-03 16:15:45.338] [Rack#01] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.358] [Rack#02] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.380] [Rack#03] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.394] [Rack#04] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.414] [Rack#05] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.432] [Rack#06] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.452] [Rack#07] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:45.468] [Rack#08] The BSC receives all the RBMS version information.
+[2021-06-03 16:15:49.502] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2021-06-03 16:16:09.503] [BSC] The initializing process is done, the BSC state is Normal(Offline).

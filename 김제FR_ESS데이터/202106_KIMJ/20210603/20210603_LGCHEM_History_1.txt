@@ -1,0 +1,393 @@
+#Application: JXR BSC 1.7.6.4
+#Release Date: 20200813
+#Modbus Model: C2C Model
+[2021-06-03 13:17:56.024] [Controller] Controller Model - C2C (STD Base)
+[2021-06-03 13:17:56.040] [Controller] The Modbus port is opened successfully.
+[2021-06-03 13:17:56.247] [BSC] The Main controller is connected. - IP: 10.10.102.71:51082 (1836), The number of clients - 1
+[2021-06-03 13:17:56.592] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 13:17:56.980] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 13:17:56.980] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 13:17:56.980] [Sensor#2] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 13:17:56.980] [BSC] The Main controller is connected. - IP: 10.10.102.71:51081 (1840), The number of clients - 2
+[2021-06-03 13:17:56.980] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:51081 (1840), The number of clients - 1
+[2021-06-03 13:17:58.014] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:50515 (2132), The number of clients - 2
+[2021-06-03 13:17:59.089] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:17:59.099] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:00.105] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:00.115] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:01.123] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:01.133] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:02.144] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:02.154] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:03.157] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:03.167] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:04.178] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:04.188] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:05.190] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:05.200] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:05.408] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:06.211] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 13:18:06.221] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 13:18:06.425] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:07.222] [BSC] BMS ID configuration is completed.
+[2021-06-03 13:18:07.222] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2021-06-03 13:18:07.444] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:08.465] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:09.477] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:10.498] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:11.511] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:12.531] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2021-06-03 13:18:22.222] [BSC] The BSC is getting the BMS version information.
+[2021-06-03 13:18:22.237] [Rack#01] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.255] [Rack#02] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.271] [Rack#03] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.283] [Rack#04] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.297] [Rack#05] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.317] [Rack#06] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.329] [Rack#07] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:22.349] [Rack#08] The BSC receives all the RBMS version information.
+[2021-06-03 13:18:26.376] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2021-06-03 13:18:46.377] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2021-06-03 13:18:59.014] [PLC#1] Alarm: DC Disconnect Switch is open.
+[2021-06-03 13:22:32.452] [BSC] Login : Administrator
+[2021-06-03 13:38:18.035] [PLC#1] Alarm: DC Disconnect Switch is open released.
+[2021-06-03 13:47:36.773] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 13:47:37.774] [BSC] Start BMS contactor control.
+[2021-06-03 13:47:37.774] [Rack#01] Contactor Control Standard Rack Voltage: 871.1V, The number of racks can become online: 8ea
+[2021-06-03 13:47:40.040] [Rack#01] The precharge contactor is closed.
+[2021-06-03 13:47:41.041] [Rack#02] The precharge contactor is closed.
+[2021-06-03 13:47:42.040] [Rack#03] The precharge contactor is closed.
+[2021-06-03 13:47:43.040] [Rack#04] The precharge contactor is closed.
+[2021-06-03 13:47:44.040] [Rack#05] The precharge contactor is closed.
+[2021-06-03 13:47:45.040] [Rack#06] The precharge contactor is closed.
+[2021-06-03 13:47:46.040] [Rack#07] The precharge contactor is closed.
+[2021-06-03 13:47:47.040] [Rack#08] The precharge contactor is closed.
+[2021-06-03 13:47:50.040] [Rack#01] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:51.040] [Rack#02] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:52.040] [Rack#03] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:53.040] [Rack#04] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:54.040] [Rack#05] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:55.040] [Rack#06] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:56.040] [Rack#07] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:57.040] [Rack#08] The precharge contactor and the main contactor is closed.
+[2021-06-03 13:47:59.040] [Rack#01] The precharge contactor is opened.
+[2021-06-03 13:48:01.040] [Rack#02] The precharge contactor is opened.
+[2021-06-03 13:48:02.040] [Rack#03] The precharge contactor is opened.
+[2021-06-03 13:48:03.040] [Rack#04] The precharge contactor is opened.
+[2021-06-03 13:48:03.040] [Rack#05] The precharge contactor is opened.
+[2021-06-03 13:48:05.040] [Rack#06] The precharge contactor is opened.
+[2021-06-03 13:48:06.040] [Rack#07] The precharge contactor is opened.
+[2021-06-03 13:48:07.040] [Rack#08] The precharge contactor is opened.
+[2021-06-03 13:48:09.041] [BSC] The contactor control is completed.
+[2021-06-03 14:15:32.159] [BSC] Warning: Over Discharge Current.
+[2021-06-03 14:15:33.816] [BSC] Mode change : Emergency
+[2021-06-03 14:15:33.816] [Controlller]The BSC will open all the main contactors because of entering the Emergency Mode.
+[2021-06-03 14:15:35.079] [PLC#1] Alarm: DC Disconnect Switch is open.
+[2021-06-03 14:15:39.154] [BSC] Warning: Over Discharge Current released.
+[2021-06-03 14:26:21.834] [BSC] Restart all the BMSs and BSC S/W.
+[2021-06-03 14:26:23.107] [PLC#1] Alarm: DC Disconnect Switch is open.
+[2021-06-03 14:26:23.981] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 14:26:26.095] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:26.106] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:27.120] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:27.130] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:28.146] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:28.154] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:29.159] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:29.171] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:30.175] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:30.183] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:31.283] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:31.308] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:32.334] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:32.340] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:32.416] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:33.346] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:26:33.356] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:26:33.441] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:34.356] [BSC] BMS ID configuration is completed.
+[2021-06-03 14:26:34.356] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2021-06-03 14:26:34.463] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:35.479] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:36.528] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:37.603] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:38.651] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:39.665] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2021-06-03 14:26:49.357] [BSC] The BSC is getting the BMS version information.
+[2021-06-03 14:26:49.375] [Rack#01] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.389] [Rack#02] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.403] [Rack#03] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.419] [Rack#04] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.433] [Rack#05] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.453] [Rack#06] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.471] [Rack#07] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:49.485] [Rack#08] The BSC receives all the RBMS version information.
+[2021-06-03 14:26:53.503] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2021-06-03 14:27:13.504] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2021-06-03 14:28:57.839] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 14:28:58.840] [BSC] Start BMS contactor control.
+[2021-06-03 14:28:58.840] [Rack#08] Contactor Control Standard Rack Voltage: 854.3V, The number of racks can become online: 0ea
+[2021-06-03 14:28:58.840] [BSC] The number of racks can become online is 0, Check it again.
+[2021-06-03 14:29:00.838] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 14:29:01.840] [BSC] Start BMS contactor control.
+[2021-06-03 14:29:01.840] [Rack#08] Contactor Control Standard Rack Voltage: 854.3V, The number of racks can become online: 0ea
+[2021-06-03 14:29:01.840] [BSC] The number of racks can become online is 0, Check it again.
+[2021-06-03 14:29:03.840] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 14:29:04.840] [BSC] Start BMS contactor control.
+[2021-06-03 14:29:04.840] [Rack#08] Contactor Control Standard Rack Voltage: 854.4V, The number of racks can become online: 0ea
+[2021-06-03 14:29:04.840] [BSC] The number of racks can become online is 0, Check it again.
+[2021-06-03 14:32:05.106] [PLC#1] Alarm: DC Disconnect Switch is open released.
+[2021-06-03 14:32:57.113] [BSC] Stop monitoring the battery section.
+[2021-06-03 14:32:59.141] [BSC] BSC closes the CAN channel successfully.
+[2021-06-03 14:33:05.325] [Controller] BSC closes the Modbus port successfully.
+[2021-06-03 14:33:05.325] [BSC] BSC Mode : BMS NV Configuration
+[2021-06-03 14:33:05.329] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 14:33:05.330] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:51082 (1836), The number of clients - 1
+[2021-06-03 14:33:05.330] [BSC] The PLC #1 is disconnected. - IP: 10.10.102.201:50515 (2132), The number of clients - 0
+[2021-06-03 14:33:05.330] [Sensor#2] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 14:33:05.330] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 14:33:05.342] [BSC] BMSs are entering the NV configuration mode.
+[2021-06-03 14:33:05.342] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 14:33:06.499] [BSC] The initializing process is done, start Critical Event Record configuration.
+[2021-06-03 14:33:24.696] [Controller] Controller Model - C2C (STD Base)
+[2021-06-03 14:33:24.698] [Controller] The Modbus port is opened successfully.
+[2021-06-03 14:33:24.698] [BSC] BSC Mode : BSC Original
+[2021-06-03 14:33:24.698] [BSC] Stop monitoring the battery section.
+[2021-06-03 14:33:26.904] [BSC] BSC closes the CAN channel successfully.
+[2021-06-03 14:33:26.905] [BSC] The Main controller is connected. - IP: 10.10.102.71:51104 (2148), The number of clients - 1
+[2021-06-03 14:33:27.008] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 14:33:27.011] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 14:33:27.011] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:50526 (1864), The number of clients - 2
+[2021-06-03 14:33:28.008] [Sensor#1] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 14:33:28.009] [Sensor#2] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 14:33:29.119] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:29.129] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:30.133] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:30.143] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:31.149] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:31.159] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:32.163] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:32.173] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:33.178] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:33.187] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:34.198] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:34.208] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:35.217] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:35.227] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:35.438] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:36.237] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 14:33:36.247] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 14:33:36.452] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:37.248] [BSC] BMS ID configuration is completed.
+[2021-06-03 14:33:37.248] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2021-06-03 14:33:37.468] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:38.483] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:39.497] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:40.518] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:41.537] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:42.557] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2021-06-03 14:33:52.249] [BSC] The BSC is getting the BMS version information.
+[2021-06-03 14:33:52.268] [Rack#01] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.282] [Rack#02] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.297] [Rack#03] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.313] [Rack#04] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.327] [Rack#05] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.347] [Rack#06] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.368] [Rack#07] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:52.386] [Rack#08] The BSC receives all the RBMS version information.
+[2021-06-03 14:33:56.403] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2021-06-03 14:34:06.234] [BSC] Alarm : External Temperature / Humidity Sensor LOC.
+[2021-06-03 14:34:06.234] [Sensor#1] Alarm : External Temperature / Humidity Sensor LOC.
+[2021-06-03 14:34:06.234] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC.
+[2021-06-03 14:34:15.237] [BSC] Warning : External Temperature / Humidity Sensor LOC.
+[2021-06-03 14:34:16.405] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2021-06-03 14:34:18.847] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 14:34:19.849] [BSC] Start BMS contactor control.
+[2021-06-03 14:34:19.849] [Rack#01] Contactor Control Standard Rack Voltage: 854.3V, The number of racks can become online: 8ea
+[2021-06-03 14:34:21.040] [Rack#01] The precharge contactor is closed.
+[2021-06-03 14:34:22.040] [Rack#02] The precharge contactor is closed.
+[2021-06-03 14:34:23.040] [Rack#03] The precharge contactor is closed.
+[2021-06-03 14:34:25.040] [Rack#04] The precharge contactor is closed.
+[2021-06-03 14:34:25.040] [Rack#05] The precharge contactor is closed.
+[2021-06-03 14:34:27.040] [Rack#06] The precharge contactor is closed.
+[2021-06-03 14:34:27.040] [Rack#07] The precharge contactor is closed.
+[2021-06-03 14:34:28.040] [Rack#08] The precharge contactor is closed.
+[2021-06-03 14:34:31.040] [Rack#01] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:31.237] [Sensor#1] Alarm : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 14:34:32.040] [Rack#02] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:32.234] [BSC] Alarm : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 14:34:32.234] [BSC] Warning : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 14:34:32.234] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 14:34:33.040] [Rack#03] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:34.040] [Rack#04] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:35.040] [Rack#05] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:36.040] [Rack#06] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:37.040] [Rack#07] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:38.040] [Rack#08] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:34:40.040] [Rack#01] The precharge contactor is opened.
+[2021-06-03 14:34:41.040] [Rack#02] The precharge contactor is opened.
+[2021-06-03 14:34:42.040] [Rack#03] The precharge contactor is opened.
+[2021-06-03 14:34:43.040] [Rack#04] The precharge contactor is opened.
+[2021-06-03 14:34:44.040] [Rack#05] The precharge contactor is opened.
+[2021-06-03 14:34:45.040] [Rack#06] The precharge contactor is opened.
+[2021-06-03 14:34:46.040] [Rack#07] The precharge contactor is opened.
+[2021-06-03 14:34:47.040] [Rack#08] The precharge contactor is opened.
+[2021-06-03 14:34:49.047] [BSC] The contactor control is completed.
+[2021-06-03 14:35:12.849] [BSC] Controller Request : Open all main contactors.
+[2021-06-03 14:35:42.850] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 14:35:43.851] [BSC] Start BMS contactor control.
+[2021-06-03 14:35:43.851] [Rack#01] Contactor Control Standard Rack Voltage: 854.4V, The number of racks can become online: 8ea
+[2021-06-03 14:35:45.040] [Rack#01] The precharge contactor is closed.
+[2021-06-03 14:35:47.040] [Rack#02] The precharge contactor is closed.
+[2021-06-03 14:35:47.040] [Rack#03] The precharge contactor is closed.
+[2021-06-03 14:35:49.040] [Rack#04] The precharge contactor is closed.
+[2021-06-03 14:35:49.040] [Rack#05] The precharge contactor is closed.
+[2021-06-03 14:35:51.040] [Rack#06] The precharge contactor is closed.
+[2021-06-03 14:35:51.040] [Rack#07] The precharge contactor is closed.
+[2021-06-03 14:35:53.040] [Rack#08] The precharge contactor is closed.
+[2021-06-03 14:35:56.040] [Rack#01] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:35:57.040] [Rack#02] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:35:58.040] [Rack#03] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:35:59.040] [Rack#04] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:36:00.040] [Rack#05] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:36:01.040] [Rack#06] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:36:02.040] [Rack#07] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:36:03.040] [Rack#08] The precharge contactor and the main contactor is closed.
+[2021-06-03 14:36:05.040] [Rack#01] The precharge contactor is opened.
+[2021-06-03 14:36:06.040] [Rack#02] The precharge contactor is opened.
+[2021-06-03 14:36:07.040] [Rack#03] The precharge contactor is opened.
+[2021-06-03 14:36:08.040] [Rack#04] The precharge contactor is opened.
+[2021-06-03 14:36:09.040] [Rack#05] The precharge contactor is opened.
+[2021-06-03 14:36:10.040] [Rack#06] The precharge contactor is opened.
+[2021-06-03 14:36:11.040] [Rack#07] The precharge contactor is opened.
+[2021-06-03 14:36:12.040] [Rack#08] The precharge contactor is opened.
+[2021-06-03 14:36:14.047] [BSC] The contactor control is completed.
+[2021-06-03 15:36:27.458] [BSC] Stop monitoring the battery section.
+[2021-06-03 15:36:28.450] [Rack#02] Rack Data Missing: 0x0
+[2021-06-03 15:36:28.475] [Rack#03] Rack Data Missing: 0x0
+[2021-06-03 15:36:28.500] [Rack#04] Rack Data Missing: 0x0
+[2021-06-03 15:36:28.525] [Rack#05] Rack Data Missing: 0x0
+[2021-06-03 15:36:28.549] [Rack#06] Rack Data Missing: 0x0
+[2021-06-03 15:36:29.667] [BSC] BSC closes the CAN channel successfully.
+[2021-06-03 15:36:41.071] [BSC] Diagnostic standards are changed.
+[2021-06-03 15:36:45.560] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 15:36:45.562] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 15:36:45.563] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 15:36:46.560] [Sensor#2] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 15:36:47.670] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:47.680] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:48.683] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:48.693] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:49.699] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:49.709] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:50.714] [Rack#04] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:50.724] [Rack#04] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:51.731] [Rack#05] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:51.741] [Rack#05] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:52.752] [Rack#06] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:52.762] [Rack#06] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:53.769] [Rack#07] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:53.779] [Rack#07] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:53.990] MBMS Wake Result recieved.(Rack : 1, Module : 34, Live Unit : 34)
+[2021-06-03 15:36:54.784] [Rack#08] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 15:36:54.794] [Rack#08] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 15:36:55.003] MBMS Wake Result recieved.(Rack : 2, Module : 34, Live Unit : 34)
+[2021-06-03 15:36:55.794] [BSC] BMS ID configuration is completed.
+[2021-06-03 15:36:55.794] [BSC] The BSC is waiting for several seconds until all the MBMSs will be on.
+[2021-06-03 15:36:56.018] MBMS Wake Result recieved.(Rack : 3, Module : 34, Live Unit : 34)
+[2021-06-03 15:36:57.035] MBMS Wake Result recieved.(Rack : 4, Module : 34, Live Unit : 34)
+[2021-06-03 15:36:58.051] MBMS Wake Result recieved.(Rack : 5, Module : 34, Live Unit : 34)
+[2021-06-03 15:36:59.072] MBMS Wake Result recieved.(Rack : 6, Module : 34, Live Unit : 34)
+[2021-06-03 15:37:00.091] MBMS Wake Result recieved.(Rack : 7, Module : 34, Live Unit : 34)
+[2021-06-03 15:37:01.104] MBMS Wake Result recieved.(Rack : 8, Module : 34, Live Unit : 34)
+[2021-06-03 15:37:10.796] [BSC] The BSC is getting the BMS version information.
+[2021-06-03 15:37:10.809] [Rack#01] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.822] [Rack#02] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.838] [Rack#03] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.854] [Rack#04] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.870] [Rack#05] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.892] [Rack#06] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.910] [Rack#07] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:10.922] [Rack#08] The BSC receives all the RBMS version information.
+[2021-06-03 15:37:14.955] [BSC] The BSC starts receiving the rack monitoring data from the BMS.
+[2021-06-03 15:37:24.634] [BSC] Alarm : External Temperature / Humidity Sensor LOC.
+[2021-06-03 15:37:24.635] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC.
+[2021-06-03 15:37:33.635] [BSC] Warning : External Temperature / Humidity Sensor LOC.
+[2021-06-03 15:37:34.956] [BSC] The initializing process is done, the BSC state is Normal(Offline).
+[2021-06-03 15:37:35.623] [BSC] Alarm : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 15:37:35.624] [BSC] Warning : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 15:37:35.624] [Sensor#2] Alarm : External Temperature / Humidity Sensor LOC released.
+[2021-06-03 15:41:15.963] [BSC] Controller Request : Close all main contactors.
+[2021-06-03 15:41:16.964] [BSC] Start BMS contactor control.
+[2021-06-03 15:41:16.964] [Rack#01] Contactor Control Standard Rack Voltage: 943.9V, The number of racks can become online: 8ea
+[2021-06-03 15:41:18.040] [Rack#01] The precharge contactor is closed.
+[2021-06-03 15:41:19.040] [Rack#02] The precharge contactor is closed.
+[2021-06-03 15:41:20.040] [Rack#03] The precharge contactor is closed.
+[2021-06-03 15:41:22.040] [Rack#04] The precharge contactor is closed.
+[2021-06-03 15:41:23.040] [Rack#05] The precharge contactor is closed.
+[2021-06-03 15:41:24.040] [Rack#06] The precharge contactor is closed.
+[2021-06-03 15:41:25.040] [Rack#07] The precharge contactor is closed.
+[2021-06-03 15:41:26.040] [Rack#08] The precharge contactor is closed.
+[2021-06-03 15:41:28.040] [Rack#01] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:29.040] [Rack#02] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:30.040] [Rack#03] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:32.040] [Rack#04] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:33.040] [Rack#05] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:34.040] [Rack#06] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:35.040] [Rack#07] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:36.040] [Rack#08] The precharge contactor and the main contactor is closed.
+[2021-06-03 15:41:38.040] [Rack#01] The precharge contactor is opened.
+[2021-06-03 15:41:39.040] [Rack#02] The precharge contactor is opened.
+[2021-06-03 15:41:40.040] [Rack#03] The precharge contactor is opened.
+[2021-06-03 15:41:42.040] [Rack#04] The precharge contactor is opened.
+[2021-06-03 15:41:43.040] [Rack#05] The precharge contactor is opened.
+[2021-06-03 15:41:44.040] [Rack#06] The precharge contactor is opened.
+[2021-06-03 15:41:45.040] [Rack#07] The precharge contactor is opened.
+[2021-06-03 15:41:46.040] [Rack#08] The precharge contactor is opened.
+[2021-06-03 15:41:48.040] [BSC] The contactor control is completed.
+[2021-06-03 15:52:06.061] [Rack#05] Rack Data Missing: 0x0
+[2021-06-03 15:52:06.086] [Rack#06] Rack Data Missing: 0x0
+[2021-06-03 15:52:06.112] [Rack#07] Rack Data Missing: 0x0
+[2021-06-03 16:13:59.983] [BSC] Stop monitoring the battery section.
+[2021-06-03 16:14:00.987] [Rack#02] Rack Data Missing: 0x0
+[2021-06-03 16:14:01.011] [Rack#03] Rack Data Missing: 0x0
+[2021-06-03 16:14:02.140] [BSC] BSC closes the CAN channel successfully.
+[2021-06-03 16:14:08.028] [Controller] BSC closes the Modbus port successfully.
+[2021-06-03 16:14:08.028] [BSC] BSC Mode : BMS NV Configuration
+[2021-06-03 16:14:08.032] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 16:14:08.034] [BSC] BMSs are entering the NV configuration mode.
+[2021-06-03 16:14:08.034] [Sensor#1] Connect with the Temperature/Humidity Sensor successfully.
+[2021-06-03 16:14:08.034] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 16:14:08.037] [BSC] The PLC #1 is disconnected. - IP: 10.10.102.201:50526 (1864), The number of clients - 1
+[2021-06-03 16:14:08.037] [BSC] The Main controller is disconnected. - IP: 10.10.102.71:51104 (2148), The number of clients - 0
+[2021-06-03 16:14:09.032] [Sensor#2] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 16:14:09.136] [BSC] The initializing process is done, start NV configuration.
+[2021-06-03 16:14:16.740] [BSC] BMS configuration is changed. (Admin Only)
+[2021-06-03 16:14:18.923] [BSC] BMS configuration is changed. (Admin Only)
+[2021-06-03 16:14:27.891] [BSC] BMS configuration is changed. (Admin Only)
+[2021-06-03 16:14:29.668] [BSC] BMS configuration is changed. (Admin Only)
+[2021-06-03 16:14:38.467] [BSC] BMS configuration is changed. (Admin Only)
+[2021-06-03 16:14:50.024] [Controller] Controller Model - C2C (STD Base)
+[2021-06-03 16:14:50.026] [Controller] The Modbus port is opened successfully.
+[2021-06-03 16:14:50.026] [BSC] BSC Mode : BSC Original
+[2021-06-03 16:14:50.026] [BSC] Stop monitoring the battery section.
+[2021-06-03 16:14:52.356] [BSC] BSC closes the CAN channel successfully.
+[2021-06-03 16:14:52.358] [BSC] The Main controller is connected. - IP: 10.10.102.71:51151 (748), The number of clients - 1
+[2021-06-03 16:14:52.463] [BSC] BSC opens the CAN channel successfully.
+[2021-06-03 16:14:52.466] [BSC] The BSC starts initializing the BMS.
+[2021-06-03 16:14:52.467] [BSC] The PLC #1 is connected. - IP: 10.10.102.201:50558 (1412), The number of clients - 2
+[2021-06-03 16:14:52.489] [BSC] The Main controller is connected. - IP: 10.10.102.71:51152 (2232), The number of clients - 3
+[2021-06-03 16:14:53.464] [Sensor#2] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 16:14:53.464] [Sensor#1] Cannot connect with the Temperature/Humidity Sensor.
+[2021-06-03 16:14:54.578] [Rack#01] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:14:54.588] [Rack#01] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:14:55.600] [Rack#02] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:14:55.610] [Rack#02] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:14:56.618] [Rack#03] The BSC receives the 1st IDC Ack. message and sends the 2nd IDC message.
+[2021-06-03 16:14:56.628] [Rack#03] The BSC receives the 2nd IDC Ack. message.
+[2021-06-03 16:14:57.504] [BSC] Stop monitoring the battery section.
+[2021-06-03 16:14:57.829] [Rack#04] Cannot receive the 1st IDC Ack. message.
+[2021-06-03 16:14:58.030] [Rack#04] Cannot receive the 1st IDC Ack. message.
+[2021-06-03 16:14:58.231] [Rack#04] Cannot receive the 1st IDC Ack. message.
+[2021-06-03 16:14:58.432] [Rack#04] Cannot receive the 1st IDC Ack. message.
+[2021-06-03 16:14:59.771] [BSC] BSC closes the CAN channel successfully.

@@ -1,0 +1,31 @@
+#Application: JXR BSC 1.7.6.4
+#Release Date: 20200813
+#Modbus Model: C2C Model
+[2021-06-07 13:32:40.613] [BSC] Controller Request : Close all main contactors.
+[2021-06-07 13:32:41.615] [BSC] Start BMS contactor control.
+[2021-06-07 13:32:41.615] [Rack#01] Contactor Control Standard Rack Voltage: 829.8V, The number of racks can become online: 8ea
+[2021-06-07 13:32:43.412] [Rack#01] The precharge contactor is closed.
+[2021-06-07 13:32:44.412] [Rack#02] The precharge contactor is closed.
+[2021-06-07 13:32:45.412] [Rack#03] The precharge contactor is closed.
+[2021-06-07 13:32:46.412] [Rack#04] The precharge contactor is closed.
+[2021-06-07 13:32:47.412] [Rack#05] The precharge contactor is closed.
+[2021-06-07 13:32:48.412] [Rack#06] The precharge contactor is closed.
+[2021-06-07 13:32:49.412] [Rack#07] The precharge contactor is closed.
+[2021-06-07 13:32:50.412] [Rack#08] The precharge contactor is closed.
+[2021-06-07 13:32:53.412] [Rack#01] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:54.413] [Rack#02] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:55.412] [Rack#03] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:56.412] [Rack#04] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:57.413] [Rack#05] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:58.412] [Rack#06] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:32:59.412] [Rack#07] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:33:00.412] [Rack#08] The precharge contactor and the main contactor is closed.
+[2021-06-07 13:33:02.413] [Rack#01] The precharge contactor is opened.
+[2021-06-07 13:33:03.412] [Rack#02] The precharge contactor is opened.
+[2021-06-07 13:33:05.412] [Rack#03] The precharge contactor is opened.
+[2021-06-07 13:33:05.412] [Rack#04] The precharge contactor is opened.
+[2021-06-07 13:33:07.412] [Rack#05] The precharge contactor is opened.
+[2021-06-07 13:33:08.412] [Rack#06] The precharge contactor is opened.
+[2021-06-07 13:33:09.412] [Rack#07] The precharge contactor is opened.
+[2021-06-07 13:33:10.412] [Rack#08] The precharge contactor is opened.
+[2021-06-07 13:33:12.413] [BSC] The contactor control is completed.
