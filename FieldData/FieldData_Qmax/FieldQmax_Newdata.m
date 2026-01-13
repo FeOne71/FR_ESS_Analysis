@@ -514,11 +514,11 @@ OCV_data = T.OCV_data;
             % NaN 및 Inf 제거
             all_dVdt_values = all_dVdt_values(isfinite(all_dVdt_values));
             if ~isempty(all_dVdt_values) && numel(all_dVdt_values) > 0
-                dVdt_min = min(all_dVdt_values);
-                dVdt_max = max(all_dVdt_values);
-                dVdt_range = dVdt_max - dVdt_min;
+            dVdt_min = min(all_dVdt_values);
+            dVdt_max = max(all_dVdt_values);
+            dVdt_range = dVdt_max - dVdt_min;
                 if dVdt_range > 0
-                    dVdt_ylim = [dVdt_min - dVdt_range*0.05, dVdt_max + dVdt_range*0.05]; % 5% 여유
+            dVdt_ylim = [dVdt_min - dVdt_range*0.05, dVdt_max + dVdt_range*0.05]; % 5% 여유
                 else
                     % min과 max가 같을 때
                     dVdt_ylim = [dVdt_min - 1, dVdt_max + 1];
@@ -602,7 +602,7 @@ OCV_data = T.OCV_data;
         
         xline(ax3, t(chg_end), '--', 'Color', [1 0 0], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'Charge End');
         xline(ax3, t(rest2_start), '--', 'Color', [0 0.8 0], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'Rest2 Start');
-        xline(ax3, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'SOC2');
+            xline(ax3, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'SOC2');
         title(ax3, sprintf('Rest2: Raw Voltage + dV/dt (Chg End to Rest2 End)'));
         xlabel(ax3, 'Time');
         
@@ -628,7 +628,7 @@ OCV_data = T.OCV_data;
         
         xline(ax4, t(chg_end), '--', 'Color', [1 0 0], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'Charge End');
         xline(ax4, t(rest2_start), '--', 'Color', [0 0.8 0], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'Rest2 Start');
-        xline(ax4, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'SOC2');
+            xline(ax4, t(aftChg), '--', 'Color', [0 0 1], 'LineWidth', 2, 'Alpha', 0.7, 'Label', 'SOC2');
         title(ax4, sprintf('Rest2: Filtered Voltage + dV/dt (Chg End to Rest2 End)'));
         xlabel(ax4, 'Time');
         

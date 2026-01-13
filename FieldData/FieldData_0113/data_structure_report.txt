@@ -1,0 +1,16 @@
+===== 배터리 데이터 구조 분석 리포트 =====
+분석 일시: 13-Jan-2026 14:46:54
+
+[폴더 구조]
+기본 경로: D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\Old
+총 mat 파일 수: 90
+
+[샘플 파일]
+D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\Old\2021\202106\Raw_20210601.mat
+
+[변수 정보]
+1. Raw
+   크기: [1 1]
+   타입: struct
+   메모리: 249772.21 KB
+

@@ -12,7 +12,7 @@ saveDir = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\O
 if ~exist(saveDir,'dir'); mkdir(saveDir); end
 
 channels = {'Ch09', 'Ch10', 'Ch11', 'Ch12', 'Ch13', 'Ch14', 'Ch15', 'Ch16'};
-rpt_cycles = {'0cyc', '200cyc', '400cyc','600cyc'};
+rpt_cycles = {'0cyc', '200cyc', '400cyc','600cyc','800cyc'};
 
 %% OCV Processing
 fprintf('\n=== OCV Processing ===\n');

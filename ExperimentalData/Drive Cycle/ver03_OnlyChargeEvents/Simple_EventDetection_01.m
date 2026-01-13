@@ -25,13 +25,13 @@ end
 % 파라미터
 Cnom = 64; 
 current_threshold = Cnom * 0.01; % 0.64A
-min_duration = 20;               % 최소 30초
-max_I_std = 2.0;                 % 전류 표준편차 허용 범위 2A
+min_duration = 30;               % 최소 30초
+max_I_std = 1.5;                 % 전류 표준편차 허용 범위 2A
 reference_channel = 'ch9';       % 기준 채널 (이 채널의 이벤트를 기준으로 매칭)
 time_tolerance = 5.0;            % 이벤트 매칭 시 시간 허용 오차 (초)
 
 % 이벤트 타입 선택: 'Charge', 'Discharge', 'Both'
-event_type_selection = 'Discharge';  % 'Charge': 충전만, 'Discharge': 방전만, 'Both': 모두
+event_type_selection = 'Charge';  % 'Charge': 충전만, 'Discharge': 방전만, 'Both': 모두
 
 % 이벤트 타입 선택 검증
 if ~ismember(event_type_selection, {'Charge', 'Discharge', 'Both'})
@@ -56,6 +56,9 @@ fprintf('Found %d cycle files\n', length(matFiles));
 eventCounts = struct();
 cycleNameMap = containers.Map();
 cycleNameReverseMap = containers.Map();
+
+% 필터링 통계 수집용 구조체
+filterStatsCollection = struct();
 
 for i = 1:length(matFiles)
     fileName = matFiles(i).name;
@@ -149,8 +152,40 @@ for i = 1:length(matFiles)
                 continue;
             end
             
-            ref_events = detect_events_in_channel(ref_I, ref_V, ref_t_seconds, current_threshold, ...
+            [ref_events, ref_filter_stats] = detect_events_in_channel(ref_I, ref_V, ref_t_seconds, current_threshold, ...
                                                    min_duration, max_I_std, ref_dt);
+            
+            % event_type_selection에 맞는 통계만 선택
+            if strcmp(event_type_selection, 'Charge')
+                ref_filter_stats.total_candidates = ref_filter_stats.total_candidates_charge;
+                ref_filter_stats.filtered_by_duration = ref_filter_stats.filtered_by_duration_charge;
+                ref_filter_stats.filtered_by_std = ref_filter_stats.filtered_by_std_charge;
+                ref_filter_stats.filtered_by_direction = ref_filter_stats.filtered_by_direction_charge;
+                ref_filter_stats.final_count = ref_filter_stats.final_count_charge;
+            elseif strcmp(event_type_selection, 'Discharge')
+                ref_filter_stats.total_candidates = ref_filter_stats.total_candidates_discharge;
+                ref_filter_stats.filtered_by_duration = ref_filter_stats.filtered_by_duration_discharge;
+                ref_filter_stats.filtered_by_std = ref_filter_stats.filtered_by_std_discharge;
+                ref_filter_stats.filtered_by_direction = 0; % Discharge는 방향 체크 없음
+                ref_filter_stats.final_count = ref_filter_stats.final_count_discharge;
+            else % 'Both'
+                ref_filter_stats.total_candidates = ref_filter_stats.total_candidates_charge + ref_filter_stats.total_candidates_discharge;
+                ref_filter_stats.filtered_by_duration = ref_filter_stats.filtered_by_duration_charge + ref_filter_stats.filtered_by_duration_discharge;
+                ref_filter_stats.filtered_by_std = ref_filter_stats.filtered_by_std_charge + ref_filter_stats.filtered_by_std_discharge;
+                ref_filter_stats.filtered_by_direction = ref_filter_stats.filtered_by_direction_charge;
+                ref_filter_stats.final_count = ref_filter_stats.final_count_charge + ref_filter_stats.final_count_discharge;
+            end
+            
+            % 필터링 통계 저장 (기준 채널)
+            statKey_raw = sprintf('%s_%s_%s_%s', cycleType, ref_channel_name, socName, profName);
+            % 유효한 필드명으로 변환 (숫자로 시작하면 안 됨)
+            statKey = regexprep(statKey_raw, '^(\d)', 'x$1'); % 숫자로 시작하면 앞에 'x' 추가
+            statKey = regexprep(statKey, '[^a-zA-Z0-9_]', '_'); % 특수문자를 언더스코어로 변환
+            filterStatsCollection.(statKey) = ref_filter_stats;
+            filterStatsCollection.(statKey).channel = ref_channel_name;
+            filterStatsCollection.(statKey).cycle = cycleType;
+            filterStatsCollection.(statKey).soc = socName;
+            filterStatsCollection.(statKey).profile = profName;
             
             if isempty(ref_events)
                 fprintf('      No events found in reference channel. Skipping.\n');
@@ -267,8 +302,40 @@ for i = 1:length(matFiles)
                 end
                 
                 % 채널에서 이벤트 검출
-                ch_events = detect_events_in_channel(ch_I, ch_V, ch_t_seconds, current_threshold, ...
+                [ch_events, ch_filter_stats] = detect_events_in_channel(ch_I, ch_V, ch_t_seconds, current_threshold, ...
                                                       min_duration, max_I_std, ch_dt);
+                
+                % event_type_selection에 맞는 통계만 선택
+                if strcmp(event_type_selection, 'Charge')
+                    ch_filter_stats.total_candidates = ch_filter_stats.total_candidates_charge;
+                    ch_filter_stats.filtered_by_duration = ch_filter_stats.filtered_by_duration_charge;
+                    ch_filter_stats.filtered_by_std = ch_filter_stats.filtered_by_std_charge;
+                    ch_filter_stats.filtered_by_direction = ch_filter_stats.filtered_by_direction_charge;
+                    ch_filter_stats.final_count = ch_filter_stats.final_count_charge;
+                elseif strcmp(event_type_selection, 'Discharge')
+                    ch_filter_stats.total_candidates = ch_filter_stats.total_candidates_discharge;
+                    ch_filter_stats.filtered_by_duration = ch_filter_stats.filtered_by_duration_discharge;
+                    ch_filter_stats.filtered_by_std = ch_filter_stats.filtered_by_std_discharge;
+                    ch_filter_stats.filtered_by_direction = 0; % Discharge는 방향 체크 없음
+                    ch_filter_stats.final_count = ch_filter_stats.final_count_discharge;
+                else % 'Both'
+                    ch_filter_stats.total_candidates = ch_filter_stats.total_candidates_charge + ch_filter_stats.total_candidates_discharge;
+                    ch_filter_stats.filtered_by_duration = ch_filter_stats.filtered_by_duration_charge + ch_filter_stats.filtered_by_duration_discharge;
+                    ch_filter_stats.filtered_by_std = ch_filter_stats.filtered_by_std_charge + ch_filter_stats.filtered_by_std_discharge;
+                    ch_filter_stats.filtered_by_direction = ch_filter_stats.filtered_by_direction_charge;
+                    ch_filter_stats.final_count = ch_filter_stats.final_count_charge + ch_filter_stats.final_count_discharge;
+                end
+                
+                % 필터링 통계 저장 (다른 채널)
+                statKey_raw = sprintf('%s_%s_%s_%s', cycleType, chName, socName, profName);
+                % 유효한 필드명으로 변환 (숫자로 시작하면 안 됨)
+                statKey = regexprep(statKey_raw, '^(\d)', 'x$1'); % 숫자로 시작하면 앞에 'x' 추가
+                statKey = regexprep(statKey, '[^a-zA-Z0-9_]', '_'); % 특수문자를 언더스코어로 변환
+                filterStatsCollection.(statKey) = ch_filter_stats;
+                filterStatsCollection.(statKey).channel = chName;
+                filterStatsCollection.(statKey).cycle = cycleType;
+                filterStatsCollection.(statKey).soc = socName;
+                filterStatsCollection.(statKey).profile = profName;
                 
                 if isempty(ch_events)
                     continue;
@@ -371,6 +438,100 @@ for i = 1:length(matFiles)
     savePath = fullfile(outputDir, sprintf('Lab_DC_Events_Raw_%s.mat', cycleType));
     save(savePath, 'rawEvents');
     fprintf('  Saved events to: %s\n', savePath);
+end
+
+%% 디버깅: 필터링 통계 표시 (DC별)
+fprintf('\n=== 디버깅: 필터링 통계 (DC별) ===\n');
+
+statsFields = fieldnames(filterStatsCollection);
+if ~isempty(statsFields)
+    % DC별로 통계 집계 (구조체 사용)
+    dcStatsStruct = struct();
+    
+    for s = 1:length(statsFields)
+        statKey = statsFields{s};
+        stats = filterStatsCollection.(statKey);
+        
+        if isfield(stats, 'profile') && isfield(stats, 'total_candidates')
+            profName = stats.profile;
+            
+            % DC별로 그룹화
+            if ~isfield(dcStatsStruct, profName)
+                dcStatsStruct.(profName) = struct();
+                dcStatsStruct.(profName).total_candidates = 0;
+                dcStatsStruct.(profName).filtered_by_duration = 0;
+                dcStatsStruct.(profName).filtered_by_std = 0;
+                dcStatsStruct.(profName).filtered_by_direction = 0;
+                dcStatsStruct.(profName).final_count = 0;
+            end
+            
+            % 통계 합산
+            dcStatsStruct.(profName).total_candidates = dcStatsStruct.(profName).total_candidates + stats.total_candidates;
+            dcStatsStruct.(profName).filtered_by_duration = dcStatsStruct.(profName).filtered_by_duration + stats.filtered_by_duration;
+            dcStatsStruct.(profName).filtered_by_std = dcStatsStruct.(profName).filtered_by_std + stats.filtered_by_std;
+            dcStatsStruct.(profName).filtered_by_direction = dcStatsStruct.(profName).filtered_by_direction + stats.filtered_by_direction;
+            dcStatsStruct.(profName).final_count = dcStatsStruct.(profName).final_count + stats.final_count;
+        end
+    end
+    
+    dcNames = fieldnames(dcStatsStruct);
+    if ~isempty(dcNames)
+        % DC 목록 정렬
+        dcNamesSorted = sort(dcNames);
+        
+        % 표 헤더 (엑셀 복사용 쉼표 구분)
+        fprintf('\n필터링 통계 (DC별 집계) - 엑셀 복사용 (쉼표 구분):\n');
+        fprintf('DC,총후보,제거:시간,제거:표준편차,제거:방향,최종\n');
+        
+        % 각 DC별 통계 출력 (쉼표 구분)
+        for d = 1:length(dcNamesSorted)
+            dcName = dcNamesSorted{d};
+            dcStats = dcStatsStruct.(dcName);
+            
+            fprintf('%s,%d,%d,%d,%d,%d\n', ...
+                dcName, ...
+                dcStats.total_candidates, ...
+                dcStats.filtered_by_duration, ...
+                dcStats.filtered_by_std, ...
+                dcStats.filtered_by_direction, ...
+                dcStats.final_count);
+        end
+        
+        % 전체 합계
+        totalAll = struct();
+        totalAll.total_candidates = 0;
+        totalAll.filtered_by_duration = 0;
+        totalAll.filtered_by_std = 0;
+        totalAll.filtered_by_direction = 0;
+        totalAll.final_count = 0;
+        
+        for d = 1:length(dcNamesSorted)
+            dcName = dcNamesSorted{d};
+            dcStats = dcStatsStruct.(dcName);
+            totalAll.total_candidates = totalAll.total_candidates + dcStats.total_candidates;
+            totalAll.filtered_by_duration = totalAll.filtered_by_duration + dcStats.filtered_by_duration;
+            totalAll.filtered_by_std = totalAll.filtered_by_std + dcStats.filtered_by_std;
+            totalAll.filtered_by_direction = totalAll.filtered_by_direction + dcStats.filtered_by_direction;
+            totalAll.final_count = totalAll.final_count + dcStats.final_count;
+        end
+        
+        fprintf('전체,%d,%d,%d,%d,%d\n', ...
+            totalAll.total_candidates, ...
+            totalAll.filtered_by_duration, ...
+            totalAll.filtered_by_std, ...
+            totalAll.filtered_by_direction, ...
+            totalAll.final_count);
+        
+        % 비율 표시
+        if totalAll.total_candidates > 0
+            fprintf('\n비율 (전체):\n');
+            fprintf('%-40s: %8d (%5.1f%%)\n', '총 후보 이벤트 수', totalAll.total_candidates, 100.0);
+            fprintf('%-40s: %8d (%5.1f%%)\n', '제거: 지속시간 부족', totalAll.filtered_by_duration, totalAll.filtered_by_duration/totalAll.total_candidates*100);
+            fprintf('%-40s: %8d (%5.1f%%)\n', '제거: 전류 표준편차 초과', totalAll.filtered_by_std, totalAll.filtered_by_std/totalAll.total_candidates*100);
+            fprintf('%-40s: %8d (%5.1f%%)\n', '제거: 방향 불일치', totalAll.filtered_by_direction, totalAll.filtered_by_direction/totalAll.total_candidates*100);
+            fprintf('%-40s: %8d (%5.1f%%)\n', '최종 채택 이벤트 수', totalAll.final_count, totalAll.final_count/totalAll.total_candidates*100);
+        end
+    end
 end
 
 %% 디버깅: 각 DC별 이벤트 검출 현황 표시
@@ -742,12 +903,26 @@ fprintf('\n=== Current Profile Visualization Complete ===\n');
 
 %% 로컬 함수들
 
-function events = detect_events_in_channel(I, V, t_seconds, current_threshold, min_duration, max_I_std, dt)
+function [events, filter_stats] = detect_events_in_channel(I, V, t_seconds, current_threshold, min_duration, max_I_std, dt)
     % 단일 채널에서 이벤트를 검출하고 반환
-    % 반환값: events 구조체 배열 (각 요소는 start_time, end_time, start_idx, end_idx, type, I_seg, V_seg, t_seg, duration 포함)
+    % 반환값: 
+    %   events: events 구조체 배열 (각 요소는 start_time, end_time, start_idx, end_idx, type, I_seg, V_seg, t_seg, duration 포함)
+    %   filter_stats: 필터링 통계 구조체
     
     events = struct('start_time', {}, 'end_time', {}, 'start_idx', {}, 'end_idx', {}, ...
                     'type', {}, 'I_seg', {}, 'V_seg', {}, 't_seg', {}, 'duration', {});
+    
+    % 필터링 통계 초기화 (타입별로 분리)
+    filter_stats = struct();
+    filter_stats.total_candidates_charge = 0;
+    filter_stats.total_candidates_discharge = 0;
+    filter_stats.filtered_by_duration_charge = 0;
+    filter_stats.filtered_by_duration_discharge = 0;
+    filter_stats.filtered_by_std_charge = 0;
+    filter_stats.filtered_by_std_discharge = 0;
+    filter_stats.filtered_by_direction_charge = 0;
+    filter_stats.final_count_charge = 0;
+    filter_stats.final_count_discharge = 0;
     
     if length(t_seconds) < 10 || length(I) < 10 || length(V) < 10
         return;
@@ -770,18 +945,27 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
     idle_to_driving = find(is_idle(1:end-1) & is_driving(2:end));
     
     if isempty(idle_to_driving)
+        filter_stats.total_candidates_charge = 0;
+        filter_stats.total_candidates_discharge = 0;
         return;
     end
     
     evt_count = 0;
+    evt_count_charge = 0;
+    evt_count_discharge = 0;
     for k = 1:length(idle_to_driving)
         idx1 = idle_to_driving(k);
         start_driving_idx = idx1 + 1;
         
         % 이벤트 타입 판별 - 필터링된 데이터 I_filt 사용
         event_type = sign(I_filt(start_driving_idx));
-        if event_type == 0
-            continue;
+        % 주석: event_type == 0 체크는 불필요 (abs(I_filt) >= threshold이므로 0일 수 없음)
+        
+        % 타입별 후보 카운트
+        if event_type > 0
+            filter_stats.total_candidates_charge = filter_stats.total_candidates_charge + 1;
+        else
+            filter_stats.total_candidates_discharge = filter_stats.total_candidates_discharge + 1;
         end
         
         % driving 구간의 끝 찾기
@@ -801,6 +985,11 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
         % 지속시간 체크
         driving_time = t_seconds(driving_end_idx) - t_seconds(start_driving_idx);
         if driving_time < min_duration
+            if event_type > 0
+                filter_stats.filtered_by_duration_charge = filter_stats.filtered_by_duration_charge + 1;
+            else
+                filter_stats.filtered_by_duration_discharge = filter_stats.filtered_by_duration_discharge + 1;
+            end
             continue;
         end
         
@@ -812,6 +1001,11 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
         % 전류 안정성 체크
         I_std_val = std(I_seg);
         if I_std_val > max_I_std
+            if event_type > 0
+                filter_stats.filtered_by_std_charge = filter_stats.filtered_by_std_charge + 1;
+            else
+                filter_stats.filtered_by_std_discharge = filter_stats.filtered_by_std_discharge + 1;
+            end
             continue;
         end
         
@@ -819,6 +1013,7 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
         if event_type > 0
             positive_ratio = sum(I_seg > 0) / length(I_seg);
             if positive_ratio < 0.5
+                filter_stats.filtered_by_direction_charge = filter_stats.filtered_by_direction_charge + 1;
                 continue;
             end
         end
@@ -832,6 +1027,11 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
         
         % 이벤트 저장
         evt_count = evt_count + 1;
+        if event_type > 0
+            evt_count_charge = evt_count_charge + 1;
+        else
+            evt_count_discharge = evt_count_discharge + 1;
+        end
         events(evt_count).start_time = t_seconds(start_driving_idx);
         events(evt_count).end_time = t_seconds(driving_end_idx);
         events(evt_count).start_idx = start_idx;
@@ -842,6 +1042,9 @@ function events = detect_events_in_channel(I, V, t_seconds, current_threshold, m
         events(evt_count).t_seg = t_seg;
         events(evt_count).duration = driving_time;
     end
+    
+    filter_stats.final_count_charge = evt_count_charge;
+    filter_stats.final_count_discharge = evt_count_discharge;
 end
 
 function match_idx = match_event_to_reference(event_start, event_end, ref_events, time_tolerance)
@@ -867,12 +1070,12 @@ function match_idx = match_event_to_reference(event_start, event_end, ref_events
             overlap_ratio = overlap_time / avg_duration;
         else
             % 겹침이 없으면 시작 시간 차이로 판단
-            time_diff = min(abs(event_start - ref_start), abs(event_end - ref_end));
-            if time_diff <= time_tolerance
-                overlap_ratio = 0.5; % 겹침은 없지만 시간적으로 가까움
-            else
+            % time_diff = min(abs(event_start - ref_start), abs(event_end - ref_end));
+            % if time_diff <= time_tolerance
+            %     overlap_ratio = 0.5; % 겹침은 없지만 시간적으로 가까움
+            % else
                 overlap_ratio = 0;
-            end
+            % end
         end
         
         % 최대 겹침을 가진 이벤트 선택 (최소 30% 겹침 필요)
@@ -883,15 +1086,15 @@ function match_idx = match_event_to_reference(event_start, event_end, ref_events
     end
     
     % 겹침이 부족한 경우 시작 시간 차이만으로 매칭 시도
-    if match_idx == 0
-        min_time_diff = inf;
-        for i = 1:length(ref_events)
-            ref_start = ref_events(i).start_time;
-            time_diff_start = abs(event_start - ref_start);
-            if time_diff_start < min_time_diff && time_diff_start <= time_tolerance
-                min_time_diff = time_diff_start;
-                match_idx = i;
-            end
-        end
-    end
+    % if match_idx == 0
+    %     min_time_diff = inf;
+    %     for i = 1:length(ref_events)
+    %         ref_start = ref_events(i).start_time;
+    %         time_diff_start = abs(event_start - ref_start);
+    %         if time_diff_start < min_time_diff && time_diff_start <= time_tolerance
+    %             min_time_diff = time_diff_start;
+    %             match_idx = i;
+    %         end
+    %     end
+    % end
 end
