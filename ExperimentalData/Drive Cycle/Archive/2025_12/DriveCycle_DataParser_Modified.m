@@ -7,7 +7,8 @@
 clear; clc; close all;
 
 % 경로 설정 - 현재 디렉토리 사용
-dataDir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\Drive Cycle';
+% dataDir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\Drive Cycle';
+dataDir = 'D:\JCW\Projects\KEPCO_ESS_Local\Experimental Data\Drive Cycle';
 saveFolder = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\Drive Cycle\parsed_data';
 
 if ~exist(saveFolder, 'dir'); mkdir(saveFolder); end
