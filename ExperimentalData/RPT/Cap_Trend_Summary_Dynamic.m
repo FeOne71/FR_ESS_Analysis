@@ -21,10 +21,10 @@ chList = {'09', '10', '11', '12', '13', '14', '15', '16'};  % Modify as needed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Define RPT cycles to analyze (can be easily modified)
-rptCycles = [0, 200, 400, 600, 800];  % Add more cycles here as needed
+rptCycles = [0, 200, 400, 600, 800, 1000];  % Add more cycles here as needed
 
 %% Define Aging cycles to analyze (can be easily modified)
-agingCycles = [0, 200, 400, 600, 800];  % Start and end cycles for each aging period
+agingCycles = [0, 200, 400, 600, 800, 1000];  % Start and end cycles for each aging period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Fig color

@@ -1,18 +1,22 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % RPT Postprocessing - Generate and Save Figures by Category
 % Chg/Dch OCV > Avg OCV > Iterate 8Ch 
+% Static Cpacity / OCV Curve integration scipt
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear; clc; close all;
 warning off;
 
 %% File Directory
-ExperimentalDataPath = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\RPT';
-saveDir = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\OCV_integrated';
-if ~exist(saveDir,'dir'); mkdir(saveDir); end
+% ExperimentalDataPath = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\RPT';
+ExperimentalDataPath = 'D:\JCW\Projects\KEPCO_ESS_Local\Experimental Data\RPT';
+saveDir_OCV   = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\OCV_integrated';
+saveDir_Crate = 'D:\JCW\Projects\KEPCO_ESS_Local\ExperimentalData\RPT\Postprocessing\Crate_integrated';
+if ~exist(saveDir_OCV,'dir'); mkdir(saveDir_OCV); end
+if ~exist(saveDir_Crate,'dir'); mkdir(saveDir_Crate); end
 
 channels = {'Ch09', 'Ch10', 'Ch11', 'Ch12', 'Ch13', 'Ch14', 'Ch15', 'Ch16'};
-rpt_cycles = {'0cyc', '200cyc', '400cyc','600cyc','800cyc'};
+rpt_cycles = {'0cyc', '200cyc', '400cyc','600cyc','800cyc','1000cyc'};
 
 %% OCV Processing
 fprintf('\n=== OCV Processing ===\n');
@@ -46,9 +50,27 @@ for ch_idx = 1:length(channels)
         filename = sprintf('%s_RPT_%s.csv', channel, rpt_cycle);
         filepath = fullfile(ExperimentalDataPath, filename);
 
-        T = readtable(filepath);
+        % Ch14 RPT800cyc는 실험 중단으로 인해 방전 OCV 데이터 이상 - 건너뛰기
+        if strcmp(channel, 'Ch14') && strcmp(rpt_cycle, '800cyc')
+            fprintf('Skipping: Ch14 RPT800cyc (experiment interrupted, discharge OCV data invalid)\n');
+            continue;
+        end
 
-        subplot(4,1,rpt_idx);
+        % 파일이 없거나 읽을 수 없으면 건너뛰기
+        if ~isfile(filepath)
+            fprintf('Warning: File not found - %s (skipping)\n', filename);
+            continue;
+        end
+        
+        try
+            T = readtable(filepath);
+        catch ME
+            fprintf('Warning: Unable to read file - %s (skipping)\n', filename);
+            fprintf('  Error: %s\n', ME.message);
+            continue;
+        end
+
+        subplot(5,2,rpt_idx);
         hold on;
 
         charge_ocv = [];
@@ -119,7 +141,7 @@ for ch_idx = 1:length(channels)
     end
 
     % Save figure
-    figName = fullfile(saveDir, sprintf('%s_OCV.fig', channel));
+    figName = fullfile(saveDir_OCV, sprintf('%s_OCV.fig', channel));
     savefig(gcf, figName);
     close(gcf);  % 그래프 창 닫기
     fprintf('Saved: %s\n', figName);
@@ -142,7 +164,10 @@ for ch_idx = 1:length(channels)
     for rpt_idx = 1:length(rpt_cycles)
         rpt_cycle = rpt_cycles{rpt_idx};
         field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % Remove 'cyc' suffix
-        per_channel_avg_data.(field_name) = [per_channel_avg_data.(field_name); channel_ocv_data.(channel).(field_name).avg_ocv];
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_ocv_data, channel) && isfield(channel_ocv_data.(channel), field_name)
+            per_channel_avg_data.(field_name) = [per_channel_avg_data.(field_name); channel_ocv_data.(channel).(field_name).avg_ocv];
+        end
     end
 end
 
@@ -178,7 +203,7 @@ grid on;
 xlim([0 100]);
 
 % Save average OCV
-figName = fullfile(saveDir, 'Average_OCV_by_Cycle.fig');
+figName = fullfile(saveDir_OCV, 'Average_OCV_by_Cycle.fig');
 savefig(gcf, figName);
 close(gcf);  % 그래프 창 닫기
 fprintf('Saved: %s\n', figName);
@@ -206,7 +231,10 @@ for ch_idx = 1:length(channels)
     for rpt_idx = 1:length(rpt_cycles)
         rpt_cycle = rpt_cycles{rpt_idx};
         field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % Remove 'cyc' suffix
-        cap_list_data.(field_name) = [cap_list_data.(field_name), channel_ocv_data.(channel).(field_name).capacity];
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_ocv_data, channel) && isfield(channel_ocv_data.(channel), field_name)
+            cap_list_data.(field_name) = [cap_list_data.(field_name), channel_ocv_data.(channel).(field_name).capacity];
+        end
     end
 end
 
@@ -230,7 +258,10 @@ for ch_idx = 1:length(channels)
     for rpt_idx = 1:length(rpt_cycles)
         rpt_cycle = rpt_cycles{rpt_idx};
         field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % Remove 'cyc' suffix
-        static_capacity_list_dch.(field_name) = [static_capacity_list_dch.(field_name), channel_static_capacity_data.(channel).(field_name).discharge];
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_static_capacity_data, channel) && isfield(channel_static_capacity_data.(channel), field_name)
+            static_capacity_list_dch.(field_name) = [static_capacity_list_dch.(field_name), channel_static_capacity_data.(channel).(field_name).discharge];
+        end
     end
 end
 
@@ -276,7 +307,12 @@ for rpt_idx = 1:length(rpt_cycles)
     for ch_idx = 1:length(channels)
         channel = channels{ch_idx};
         channel_num = channel(3:end);  % 'Ch09' -> '09'
-        OCV_data.(sprintf('static_capacity_ch%s_rpt%s', channel_num, rpt_cycle(1:end-3))) = channel_static_capacity_data.(channel).(field_name).discharge;
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_static_capacity_data, channel) && isfield(channel_static_capacity_data.(channel), field_name)
+            OCV_data.(sprintf('static_capacity_ch%s_rpt%s', channel_num, rpt_cycle(1:end-3))) = channel_static_capacity_data.(channel).(field_name).discharge;
+        else
+            OCV_data.(sprintf('static_capacity_ch%s_rpt%s', channel_num, rpt_cycle(1:end-3))) = NaN;
+        end
     end
 end
 
@@ -296,7 +332,10 @@ for ch_idx = 1:length(channels)
     for rpt_idx = 1:length(rpt_cycles)
         rpt_cycle = rpt_cycles{rpt_idx};
         field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % Remove 'cyc' suffix
-        all_V_OCV_data.(field_name) = [all_V_OCV_data.(field_name); channel_ocv_data.(channel).(field_name).avg_ocv];
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_ocv_data, channel) && isfield(channel_ocv_data.(channel), field_name)
+            all_V_OCV_data.(field_name) = [all_V_OCV_data.(field_name); channel_ocv_data.(channel).(field_name).avg_ocv];
+        end
     end
 end
 
@@ -334,8 +373,13 @@ for rpt_idx = 1:length(rpt_cycles)
     individual_static_capacity = [];
     for ch_idx = 1:length(channels)
         channel = channels{ch_idx};
-        individual_ocv_capacity = [individual_ocv_capacity, channel_ocv_data.(channel).(field_name).capacity];
-        individual_static_capacity = [individual_static_capacity, channel_static_capacity_data.(channel).(field_name).discharge];
+        % 데이터가 있는 경우에만 추가
+        if isfield(channel_ocv_data, channel) && isfield(channel_ocv_data.(channel), field_name)
+            individual_ocv_capacity = [individual_ocv_capacity, channel_ocv_data.(channel).(field_name).capacity];
+        end
+        if isfield(channel_static_capacity_data, channel) && isfield(channel_static_capacity_data.(channel), field_name)
+            individual_static_capacity = [individual_static_capacity, channel_static_capacity_data.(channel).(field_name).discharge];
+        end
     end
     OCV_integrated_data.(field_name).individual_ocv_capacity = individual_ocv_capacity;  % 1x8 array
     OCV_integrated_data.(field_name).individual_static_capacity = individual_static_capacity;  % 1x8 array
@@ -359,7 +403,7 @@ xlim([0 100]);
 legend('Location', 'best');
 
 % 통합 그래프 저장
-figName = fullfile(saveDir, 'Integrated_OCV_8cell_Average.fig');
+figName = fullfile(saveDir_OCV, 'Integrated_OCV_8cell_Average.fig');
 savefig(gcf, figName);
 close(gcf);  % 그래프 창 닫기
 fprintf('Saved: %s\n', figName);
@@ -372,8 +416,189 @@ for rpt_idx = 1:length(rpt_cycles)
 end
 
 
-matSaveFile = fullfile(saveDir, 'OCV_integrated.mat');
+matSaveFile = fullfile(saveDir_OCV, 'OCV_integrated.mat');
 save(matSaveFile, 'OCV_data');
 fprintf('Saved OCV data MAT: %s\n', matSaveFile);
+
+%% ========================================================================
+%  C-rate Processing (0.1C/0.5C/1C/2C/3C)
+%  - Charge/Discharge step idx: [28/48, 32/52, 36/56, 40/60, 44/64]
+%  - Save Raw Voltage, Current, Capacity data (No interpolation)
+%  - Save Channel-wise data only (Removed 8-channel average)
+% =========================================================================
+
+fprintf('\n=== C-rate Processing ===\n');
+
+crate_labels = {'c01','c05','c1','c2','c3'};
+crate_steps_charge = [28 32 36 40 44];      %0.1C 0.5C 1C 2C 3C
+crate_steps_discharge = [48 52 56 60 64];   %0.1C 0.5C 1C 2C 3C
+% crate_grid_points = 200; % Removed
+
+Crate_data = struct();
+
+% 채널별 처리
+for ch_idx = 1:length(channels)
+    channel = channels{ch_idx};
+    channel_key = sprintf('Ch%s', channel(3:end));
+    Crate_data.(channel_key) = struct();
+    
+    for rpt_idx = 1:length(rpt_cycles)
+        rpt_cycle = rpt_cycles{rpt_idx};
+        cycle_key = sprintf('cyc%s', rpt_cycle(1:end-3)); % 0cyc -> cyc0 등
+        
+        % Ch14 RPT800cyc 스킵 (실험 중단)
+        if strcmp(channel, 'Ch14') && strcmp(rpt_cycle, '800cyc')
+            fprintf('Skipping C-rate: Ch14 RPT800cyc\n');
+            continue;
+        end
+        
+        filename = sprintf('%s_RPT_%s.csv', channel, rpt_cycle);
+        filepath = fullfile(ExperimentalDataPath, filename);
+        if ~isfile(filepath)
+            fprintf('Warning: File not found - %s (skipping C-rate)\n', filename);
+            continue;
+        end
+        try
+            % Use readtable with 'preserve' to safely access Current, Voltage, Capacity columns
+            T = readtable(filepath, 'VariableNamingRule', 'preserve');
+        catch ME
+            fprintf('Warning: Unable to read file - %s (skipping C-rate)\n', filename);
+            fprintf('  Error: %s\n', ME.message);
+            continue;
+        end
+        
+        % 구조 초기화
+        Crate_data.(channel_key).(cycle_key) = struct();
+        
+        for r = 1:length(crate_labels)
+            label = crate_labels{r};
+            step_chg = crate_steps_charge(r);
+            step_dch = crate_steps_discharge(r);
+            
+            % Charge
+            mask_chg = (T.("Step Index") == step_chg);
+            V_chg = T.("Voltage(V)")(mask_chg);
+            I_chg = T.("Current(A)")(mask_chg);
+            Q_chg = T.("Capacity(Ah)")(mask_chg);
+            if any(strcmp('Time', T.Properties.VariableNames))
+                t_chg = T.("Time")(mask_chg);
+            else
+                t_chg = [];
+            end
+            
+            % Discharge
+            mask_dch = (T.("Step Index") == step_dch);
+            V_dch = T.("Voltage(V)")(mask_dch);
+            I_dch = T.("Current(A)")(mask_dch);
+            Q_dch = T.("Capacity(Ah)")(mask_dch);
+            if any(strcmp('Time', T.Properties.VariableNames))
+                t_dch = T.("Time")(mask_dch);
+            else
+                t_dch = [];
+            end
+            
+            % Save Raw Data (No interpolation)
+            charge_struct = struct('V', V_chg, 'I', I_chg, 'Q', Q_chg, 't', t_chg);
+            discharge_struct = struct('V', V_dch, 'I', I_dch, 'Q', Q_dch, 't', t_dch);
+            
+            Crate_data.(channel_key).(cycle_key).(label).charge = charge_struct;
+            Crate_data.(channel_key).(cycle_key).(label).discharge = discharge_struct;
+        end
+    end
+end
+
+% Removed 8-channel averaging (total8) as it relied on common grid interpolation which is now removed.
+
+% Save C-rate data
+matSaveFile_Crate = fullfile(saveDir_Crate, 'Crate_integrated.mat');
+save(matSaveFile_Crate, 'Crate_data');
+fprintf('Saved C-rate data MAT: %s\n', matSaveFile_Crate);
+
+%% ========================================================================
+%  C-rate Visualization (Capacity vs Voltage)
+%  - 채널별: 5개 C-rate를 서브플롯(2x3)으로 구성
+%  - 사이클별 색상 구분
+%  - Charge / Discharge 각각 별도 fig 저장
+% =========================================================================
+
+fprintf('\n=== C-rate Visualization ===\n');
+rate_names = {'0.1C','0.5C','1C','2C','3C'};
+rate_labels = crate_labels;  % {'c01','c05','c1','c2','c3'}
+
+for ch_idx = 1:length(channels)
+    channel = channels{ch_idx};
+    channel_key = sprintf('Ch%s', channel(3:end));
+    
+    % Charge figure
+    fig_chg = figure('Name', sprintf('Crate Charge - %s', channel), ...
+        'Position', [100 100 1400 900], 'Color', 'w');
+    tl_chg = tiledlayout(fig_chg, 2, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+    colors = lines(length(rpt_cycles));
+    
+    for r = 1:length(rate_labels)
+        label = rate_labels{r};
+        nexttile(tl_chg, r); hold on; grid on;
+        for cycIdx = 1:length(rpt_cycles)
+            cycle = rpt_cycles{cycIdx};
+            cycle_key = sprintf('cyc%s', cycle(1:end-3));
+            if isfield(Crate_data, channel_key) && ...
+               isfield(Crate_data.(channel_key), cycle_key) && ...
+               isfield(Crate_data.(channel_key).(cycle_key), label) && ...
+               isfield(Crate_data.(channel_key).(cycle_key).(label), 'charge') && ...
+               ~isempty(Crate_data.(channel_key).(cycle_key).(label).charge.Q)
+           
+                Q = Crate_data.(channel_key).(cycle_key).(label).charge.Q;
+                V = Crate_data.(channel_key).(cycle_key).(label).charge.V;
+                % I = Crate_data.(channel_key).(cycle_key).(label).charge.I; 
+                
+                if ~isempty(Q)
+                    plot(Q, V, '-', 'LineWidth', 1.5, ...
+                        'Color', colors(cycIdx,:), 'DisplayName', cycle);
+                end
+            end
+        end
+        title(sprintf('%s Charge', rate_names{r}));
+        xlabel('Capacity [Ah]');
+        ylabel('Voltage [V]');
+        legend('Location', 'best', 'FontSize', 8);
+    end
+    savefig(fig_chg, fullfile(saveDir_Crate, sprintf('%s_Crate_Charge.fig', channel)));
+    close(fig_chg);
+    
+    % Discharge figure
+    fig_dch = figure('Name', sprintf('Crate Discharge - %s', channel), ...
+        'Position', [100 100 1400 900], 'Color', 'w');
+    tl_dch = tiledlayout(fig_dch, 2, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+    
+    for r = 1:length(rate_labels)
+        label = rate_labels{r};
+        nexttile(tl_dch, r); hold on; grid on;
+        for cycIdx = 1:length(rpt_cycles)
+            cycle = rpt_cycles{cycIdx};
+            cycle_key = sprintf('cyc%s', cycle(1:end-3));
+            if isfield(Crate_data, channel_key) && ...
+               isfield(Crate_data.(channel_key), cycle_key) && ...
+               isfield(Crate_data.(channel_key).(cycle_key), label) && ...
+               isfield(Crate_data.(channel_key).(cycle_key).(label), 'discharge') && ...
+               ~isempty(Crate_data.(channel_key).(cycle_key).(label).discharge.Q)
+           
+                Q = Crate_data.(channel_key).(cycle_key).(label).discharge.Q;
+                V = Crate_data.(channel_key).(cycle_key).(label).discharge.V;
+                % I = Crate_data.(channel_key).(cycle_key).(label).discharge.I;
+                
+                if ~isempty(Q)
+                    plot(Q, V, '-', 'LineWidth', 1.5, ...
+                        'Color', colors(cycIdx,:), 'DisplayName', cycle);
+                end
+            end
+        end
+        title(sprintf('%s Discharge', rate_names{r}));
+        xlabel('Capacity [Ah]');
+        ylabel('Voltage [V]');
+        legend('Location', 'best', 'FontSize', 8);
+    end
+    savefig(fig_dch, fullfile(saveDir_Crate, sprintf('%s_Crate_Discharge.fig', channel)));
+    close(fig_dch);
+end
 
 fprintf('\n=== RPT Postprocessing Completed ===\n');

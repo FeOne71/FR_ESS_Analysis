@@ -11,7 +11,10 @@
 *.bak
 *.tmp
 *.asv
+*.txt
 
 # ===== 모든 Archive 폴더 무시 =====
 **/Archive/
 **/Archive/**
+
+/ExperimentalData/Drive Cycle/구조_비교_결과.md

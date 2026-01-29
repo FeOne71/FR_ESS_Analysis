@@ -12,17 +12,34 @@ folderPath = 'G:\공유 드라이브\Battery Software Lab\0_Group Meeting\개인
 saveFolder = fullfile(folderPath, 'parsed_data');
 if ~exist(saveFolder, 'dir'); mkdir(saveFolder); end
 
-% File list (8 channels)
-fileNames = {
-    'Ch9_Drive_200cyc.csv';
-    'Ch10_Drive_200cyc.csv';
-    'Ch11_Drive_200cyc.csv';
-    'Ch12_Drive_200cyc.csv';
-    'Ch13_Drive_200cyc.csv';
-    'Ch14_Drive_200cyc.csv';
-    'Ch15_Drive_200cyc.csv';
-    'Ch16_Drive_200cyc.csv'
-};
+% Automatically find all CSV files matching pattern: Ch*_Drive_*cyc.csv
+fprintf('Scanning folder for CSV files: %s\n', folderPath);
+csvFiles = dir(fullfile(folderPath, 'Ch*_Drive_*cyc.csv'));
+
+if isempty(csvFiles)
+    error('No CSV files found matching pattern Ch*_Drive_*cyc.csv in %s', folderPath);
+end
+
+fprintf('Found %d CSV files\n', length(csvFiles));
+
+% Group files by cycle type
+cycleGroups = containers.Map();
+for i = 1:length(csvFiles)
+    fileName = csvFiles(i).name;
+    % Extract cycle type from filename (e.g., Ch9_Drive_200cyc.csv -> 200cyc)
+    token = regexp(fileName, 'Ch\d+_Drive_(\d+cyc)\.csv', 'tokens');
+    if ~isempty(token)
+        cycleType = token{1}{1};
+        if ~isKey(cycleGroups, cycleType)
+            cycleGroups(cycleType) = {};
+        end
+        cycleGroups(cycleType) = [cycleGroups(cycleType); {fileName}];
+    end
+end
+
+% Get all cycle types
+cycleTypes = keys(cycleGroups);
+fprintf('Found %d cycle types: %s\n\n', length(cycleTypes), strjoin(cycleTypes, ', '));
 
 % Step Index definition by SOC
 SOC90_stepIndex = [5, 7, 9, 11, 13, 15, 17, 19];
@@ -36,40 +53,50 @@ profileNames = {'DC1', 'DC2', 'DC3', 'DC4', 'DC5', 'DC6', 'DC7', 'DC8'};
 initialRestTime = 8 * 60;  % Initial 8-minute rest period
 finalRestTime = 8 * 60;    % Final 8-minute rest period (minimum)
 
-% Initialize data structure for each channel
-parsedDriveCycle_200cyc = struct();
+fprintf('Starting real-load profile data parsing...\n\n');
 
-fprintf('Starting real-load profile data parsing...\n');
-
-for i = 1:length(fileNames)
-    filename = fileNames{i};
-    filepath = fullfile(folderPath, filename);
+% Process each cycle type
+for cycleIdx = 1:length(cycleTypes)
+    cycleType = cycleTypes{cycleIdx};
+    fileNames = cycleGroups(cycleType);
     
-    if exist(filepath, 'file') ~= 2
-        fprintf('File not found: %s\n', filepath);
-        continue;
-    end
+    fprintf('========================================\n');
+    fprintf('Processing Cycle: %s (%d files)\n', cycleType, length(fileNames));
+    fprintf('========================================\n\n');
     
-    fprintf('Processing: %s\n', filename);
+    % Initialize data structure for this cycle
+    cycleData = struct();
     
-    % Read CSV file
-    T = readtable(filepath);
-    
-    % Extract data
-    stepIndex = T{:,2};     % Step Index
-    stepType = T{:,3};      % Step Type
-    time = T{:,5};          % Time [s]
-    totalTime = T{:,6};     % Total Time [s]
-    current = T{:,7};       % Current [A]
-    voltage = T{:,8};       % Voltage [V]
-    
-    % Extract channel name
-    [~, baseName, ~] = fileparts(filename);
-    channelName = extractBetween(baseName, 'Ch', '_');
-    channelFieldName = sprintf('ch%s_Drive_200cyc', channelName{1});
-    
-    % Initialize structure for each channel
-    parsedDriveCycle_200cyc.(channelFieldName) = struct();
+    % Process each file for this cycle
+    for i = 1:length(fileNames)
+        filename = fileNames{i};
+        filepath = fullfile(folderPath, filename);
+        
+        if exist(filepath, 'file') ~= 2
+            fprintf('File not found: %s\n', filepath);
+            continue;
+        end
+        
+        fprintf('Processing: %s\n', filename);
+        
+        % Read CSV file
+        T = readtable(filepath);
+        
+        % Extract data
+        stepIndex = T{:,2};     % Step Index
+        stepType = T{:,3};      % Step Type
+        time = T{:,5};          % Time [s]
+        totalTime = T{:,6};     % Total Time [s]
+        current = T{:,7};       % Current [A]
+        voltage = T{:,8};       % Voltage [V]
+        
+        % Extract channel name
+        [~, baseName, ~] = fileparts(filename);
+        channelName = extractBetween(baseName, 'Ch', '_');
+        channelFieldName = sprintf('ch%s_Drive_%s', channelName{1}, cycleType);
+        
+        % Initialize structure for each channel
+        cycleData.(channelFieldName) = struct();
     
     % Extract and process SOC90 data
     fprintf('  Extracting SOC90 data...\n');
@@ -92,11 +119,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % Store in structure
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC90.(profileName).stepIndex = stepIdx;
+            cycleData.(channelFieldName).SOC90.(profileName).V = filtered_V;
+            cycleData.(channelFieldName).SOC90.(profileName).I = filtered_I;
+            cycleData.(channelFieldName).SOC90.(profileName).t = filtered_t;
+            cycleData.(channelFieldName).SOC90.(profileName).totalTime = filtered_totalTime;
+            cycleData.(channelFieldName).SOC90.(profileName).stepIndex = stepIdx;
             
             fprintf('    %s: %d -> %d data points (removed after final rest)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -126,11 +153,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % Store in structure
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC70.(profileName).stepIndex = stepIdx;
+            cycleData.(channelFieldName).SOC70.(profileName).V = filtered_V;
+            cycleData.(channelFieldName).SOC70.(profileName).I = filtered_I;
+            cycleData.(channelFieldName).SOC70.(profileName).t = filtered_t;
+            cycleData.(channelFieldName).SOC70.(profileName).totalTime = filtered_totalTime;
+            cycleData.(channelFieldName).SOC70.(profileName).stepIndex = stepIdx;
             
             fprintf('    %s: %d -> %d data points (removed after final rest)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -160,11 +187,11 @@ for i = 1:length(fileNames)
                 removeFinalRestData(step_voltage, step_current, step_time, step_totalTime, finalRestTime);
             
             % Store in structure
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).V = filtered_V;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).I = filtered_I;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).t = filtered_t;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).totalTime = filtered_totalTime;
-            parsedDriveCycle_200cyc.(channelFieldName).SOC50.(profileName).stepIndex = stepIdx;
+            cycleData.(channelFieldName).SOC50.(profileName).V = filtered_V;
+            cycleData.(channelFieldName).SOC50.(profileName).I = filtered_I;
+            cycleData.(channelFieldName).SOC50.(profileName).t = filtered_t;
+            cycleData.(channelFieldName).SOC50.(profileName).totalTime = filtered_totalTime;
+            cycleData.(channelFieldName).SOC50.(profileName).stepIndex = stepIdx;
             
             fprintf('    %s: %d -> %d data points (removed after final rest)\n', ...
                     profileName, length(step_voltage), length(filtered_V));
@@ -173,41 +200,49 @@ for i = 1:length(fileNames)
         end
     end
     
-    fprintf('  %s completed\n\n', channelName{1});
+        fprintf('  %s completed\n\n', channelName{1});
+    end
+    
+    % Save results for this cycle
+    savePath = fullfile(saveFolder, sprintf('parsedDriveCycle_%s_filtered.mat', cycleType));
+    varName = sprintf('parsedDriveCycle_%s', cycleType);
+    eval(sprintf('%s = cycleData;', varName));
+    eval(sprintf('save(savePath, ''%s'');', varName));
+    
+    fprintf('Parsing completed for %s! Results saved to: %s\n', cycleType, savePath);
+    
+    % Print structure summary for this cycle
+    fprintf('\n=== Parsing Results Summary for %s ===\n', cycleType);
+    channels = fieldnames(cycleData);
+    for i = 1:length(channels)
+        channelName = channels{i};
+        fprintf('Channel: %s\n', channelName);
+        
+        % Check number of data for each SOC
+        if isfield(cycleData.(channelName), 'SOC90')
+            soc90_fields = fieldnames(cycleData.(channelName).SOC90);
+            fprintf('  SOC90: %d profiles\n', length(soc90_fields));
+        end
+        
+        if isfield(cycleData.(channelName), 'SOC70')
+            soc70_fields = fieldnames(cycleData.(channelName).SOC70);
+            fprintf('  SOC70: %d profiles\n', length(soc70_fields));
+        end
+        
+        if isfield(cycleData.(channelName), 'SOC50')
+            soc50_fields = fieldnames(cycleData.(channelName).SOC50);
+            fprintf('  SOC50: %d profiles\n', length(soc50_fields));
+        end
+    end
+    
+    fprintf('\nTotal parsed data: %d channels × 3 SOCs × 8 profiles = %d datasets\n', ...
+            length(channels), length(channels) * 3 * 8);
+    fprintf('\n');
 end
 
-% Save results
-savePath = fullfile(saveFolder, 'parsedDriveCycle_200cyc_filtered.mat');
-save(savePath, 'parsedDriveCycle_200cyc');
-
-fprintf('Parsing completed! Results saved to: %s\n', savePath);
-
-% Print structure summary
-fprintf('\n=== Parsing Results Summary ===\n');
-channels = fieldnames(parsedDriveCycle_200cyc);
-for i = 1:length(channels)
-    channelName = channels{i};
-    fprintf('Channel: %s\n', channelName);
-    
-    % Check number of data for each SOC
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC90')
-        soc90_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC90);
-        fprintf('  SOC90: %d profiles\n', length(soc90_fields));
-    end
-    
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC70')
-        soc70_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC70);
-        fprintf('  SOC70: %d profiles\n', length(soc70_fields));
-    end
-    
-    if isfield(parsedDriveCycle_200cyc.(channelName), 'SOC50')
-        soc50_fields = fieldnames(parsedDriveCycle_200cyc.(channelName).SOC50);
-        fprintf('  SOC50: %d profiles\n', length(soc50_fields));
-    end
-end
-
-fprintf('\nTotal parsed data: %d channels × 3 SOCs × 8 profiles = %d datasets\n', ...
-        length(channels), length(channels) * 3 * 8);
+fprintf('========================================\n');
+fprintf('All cycles processed successfully!\n');
+fprintf('========================================\n');
 
 %% Sub-function: Remove data after final rest period
 function [filtered_V, filtered_I, filtered_t, filtered_totalTime] = ...

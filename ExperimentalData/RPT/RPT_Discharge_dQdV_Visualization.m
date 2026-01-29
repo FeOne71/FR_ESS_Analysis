@@ -45,6 +45,16 @@ for chIdx = 1:length(channels)
         cycle = rptCycles(cycIdx);
         cycle_key = sprintf('cyc%d', cycle);
         
+        % Ch14 RPT800cyc는 실험 중단으로 인해 방전 OCV 데이터 이상 - 건너뛰기
+        if strcmp(ch, '14') && cycle == 800
+            fprintf('Skipping: Ch14 RPT800cyc (experiment interrupted, discharge OCV data invalid)\n');
+            all_dQdV_data.(channel_key).(cycle_key).V = [];
+            all_dQdV_data.(channel_key).(cycle_key).Q = [];
+            all_dQdV_data.(channel_key).(cycle_key).V_dQdV = [];
+            all_dQdV_data.(channel_key).(cycle_key).dQdV = [];
+            continue;
+        end
+        
         % CSV 파일 경로
         csvFile = fullfile(dataDir, sprintf('Ch%s_RPT_%dcyc.csv', ch, cycle));
         
