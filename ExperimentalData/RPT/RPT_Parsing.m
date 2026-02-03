@@ -26,6 +26,7 @@ for chIdx = 1:numel(channels)
         
         % Clear intrim for each cycle to avoid size conflicts
         clear intrim;
+        clear pdata; % Critical fix: Initialize pdata for new cycle to prevent data leakage
         
         csvPath = fullfile(dataDir, sprintf('%s_RPT_%s.csv', channel, cyc));
         if ~exist(csvPath,'file'); fprintf('Skip missing: %s\n', csvPath); continue; end

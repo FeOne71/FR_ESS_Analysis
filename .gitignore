@@ -12,6 +12,7 @@
 *.tmp
 *.asv
 *.txt
+*.pptx
 
 # ===== 모든 Archive 폴더 무시 =====
 **/Archive/
