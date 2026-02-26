@@ -1,8 +1,0 @@
-#Application: JXR BSC 1.7.6.4
-#Release Date: 20200813
-#Modbus Model: C2C Model
-[2021-06-01 00:30:27.740] [Rack#07] Rack Data Missing: 0x0
-[2021-06-01 00:30:28.740] [Rack#07] Rack Data Missing: 0x0
-[2021-06-01 00:30:42.739] [Rack#07] Rack Data Missing: 0x0
-[2021-06-01 00:30:46.739] [Rack#07] Rack Data Missing: 0x0
-[2021-06-01 00:30:53.739] [Rack#07] Rack Data Missing: 0x0
