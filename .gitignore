@@ -13,9 +13,12 @@
 *.asv
 *.txt
 *.pptx
+*.py
 
 # ===== 모든 Archive 폴더 무시 =====
 **/Archive/
 **/Archive/**
+**/Reference/**
 
 /ExperimentalData/Drive Cycle/구조_비교_결과.md
+/ExperimentalData/DOE

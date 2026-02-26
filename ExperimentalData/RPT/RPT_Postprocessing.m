@@ -7,6 +7,35 @@
 clear; clc; close all;
 warning off;
 
+% Parallel processing: set true if Parallel Computing Toolbox available
+useParallel = true;  % set true to use parfor over channels
+if useParallel
+    try
+        pool = gcp('nocreate');
+        if isempty(pool)
+            fprintf('Starting parallel pool (may take 30-60 s)...\n');
+            nWorkers = min(6, feature('numcores'));  % many clusters default to max 6
+            try
+                parpool('local', nWorkers);
+            catch ME1
+                % Try 'Threads' profile if 'local' (Processes) fails
+                fprintf('Local pool failed, trying Threads profile...\n');
+                fprintf('  Reason: %s\n', ME1.message);
+                parpool('threads', nWorkers);
+            end
+        end
+        pool = gcp('nocreate');
+        fprintf('Using parallel pool (%s, %d workers).\n', pool.Cluster.Profile, pool.NumWorkers);
+        % Attach so workers can run process_one_channel_vgrid (it has local_interp_vq/vqt inside)
+        scriptDir = fileparts(mfilename('fullpath'));
+        addAttachedFiles(pool, {fullfile(scriptDir, 'process_one_channel_vgrid.m')});
+    catch ME
+        useParallel = false;
+        fprintf('Parallel pool not available, using serial.\n');
+        fprintf('  Reason: %s\n', ME.message);
+    end
+end
+
 %% File Directory
 % ExperimentalDataPath = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS\Experimental Data\RPT';
 ExperimentalDataPath = 'D:\JCW\Projects\KEPCO_ESS_Local\Experimental Data\RPT';
@@ -38,115 +67,38 @@ for ch_idx = 1:length(channels)
     channel_static_capacity_data.(channel) = struct();
 end
 
-for ch_idx = 1:length(channels)
-    channel = channels{ch_idx};
+% Pre-allocate for parallel gather
+ch_ocv_results = cell(length(channels), 1);
+ch_static_results = cell(length(channels), 1);
 
-    % Figure 1: Individual channel OCV
-    figure('Name', sprintf('OCV - %s', channel), 'Position', [100 100 1200 800]);
-    set(gcf, 'Visible', 'off');
-
-    for rpt_idx = 1:length(rpt_cycles)
-        rpt_cycle = rpt_cycles{rpt_idx};
-        filename = sprintf('%s_RPT_%s.csv', channel, rpt_cycle);
-        filepath = fullfile(ExperimentalDataPath, filename);
-
-        % Ch14 RPT800cyc는 실험 중단으로 인해 방전 OCV 데이터 이상 - 건너뛰기
-        if strcmp(channel, 'Ch14') && strcmp(rpt_cycle, '800cyc')
-            fprintf('Skipping: Ch14 RPT800cyc (experiment interrupted, discharge OCV data invalid)\n');
-            continue;
-        end
-
-        % 파일이 없거나 읽을 수 없으면 건너뛰기
-        if ~isfile(filepath)
-            fprintf('Warning: File not found - %s (skipping)\n', filename);
-            continue;
-        end
-        
-        try
-            T = readtable(filepath);
-        catch ME
-            fprintf('Warning: Unable to read file - %s (skipping)\n', filename);
-            fprintf('  Error: %s\n', ME.message);
-            continue;
-        end
-
-        subplot(5,2,rpt_idx);
-        hold on;
-
-        charge_ocv = [];
-        discharge_ocv = [];
-
-        for ocv_idx = 1:length(ocv_conditions)
-            step_idx = ocv_steps(ocv_idx);
-            ocv_data = (T{:,2} == step_idx) & (T{:,4} == 2);
-
-            capacity_data = T{ocv_data, 9};
-            voltage_data = T{ocv_data, 8};
-
-            % Reverse discharge OCV so voltage increases with SOC
-            if strcmp(ocv_conditions{ocv_idx}, 'discharge')
-                voltage_data = flipud(voltage_data);
-            end
-
-            % Move avg (window size = data 수 / 200)
-            window_size = round(length(voltage_data) / 200);
-            if window_size < 1; window_size = 1; end
-            voltage_smoothed = movmean(voltage_data, window_size);
-
-            % 200개 간격으로 추출 (x 변수 grid 201)
-            soc_data = linspace(0, 100, 201);
-            
-            % interp로 y 추출
-            voltage_interp = interp1(linspace(0, 100, length(voltage_smoothed)), voltage_smoothed, soc_data, 'linear');
-
-            if strcmp(ocv_conditions{ocv_idx}, 'charge')
-                charge_ocv = voltage_interp;
-                plot(soc_data, voltage_interp, 'b-', 'LineWidth', 2, 'DisplayName', 'Charge');
-            else
-                discharge_ocv = voltage_interp;
-                plot(soc_data, voltage_interp, 'r-', 'LineWidth', 2, 'DisplayName', 'Discharge');
-            end
-        end
-
-        % Calculate and display average charge/discharge OCV
-        avg_ocv = (charge_ocv + discharge_ocv) / 2;
-        plot(soc_data, avg_ocv, 'g-', 'LineWidth', 2, 'DisplayName', 'Average');
-
-        % Dynamic Field name mapping
-        field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % '0cyc' → 'cyc0', '200cyc' → 'cyc200', etc.
-
-        % Save soc, avg_ocv, capacity (use last capacity of each step)
-        charge_mask = (T{:,2} == ocv_steps(1)) & (T{:,4} == 2);
-        discharge_mask = (T{:,2} == ocv_steps(2)) & (T{:,4} == 2);
-        channel_ocv_data.(channel).(field_name).soc = soc_data;
-        channel_ocv_data.(channel).(field_name).avg_ocv = avg_ocv;
-        channel_ocv_data.(channel).(field_name).capacity = (T{find(charge_mask,1,'last'), 9} + T{find(discharge_mask,1,'last'), 9})/2;
-        
-        % Extract Static Capacity (Step 3: Discharge only)
-        static_dch_mask = (T{:,2} == static_capacity_step) & (T{:,4} == 2);
-        if any(static_dch_mask)
-            static_capacity_dch = T{find(static_dch_mask,1,'last'), 9};  % Last capacity of discharge step
-            channel_static_capacity_data.(channel).(field_name).discharge = static_capacity_dch;
-        else
-            channel_static_capacity_data.(channel).(field_name).discharge = NaN;
-            fprintf('Warning: Static Capacity (discharge) data not found for %s - %s\n', channel, rpt_cycle);
-        end
-
-        xlabel('SOC [%]');
-        ylabel('Voltage [V]');
-        title(sprintf('%s - %s OCV', channel, rpt_cycle));
-        legend('Location', 'best');
-        grid on;
-        xlim([0 100]);
+if useParallel
+    parfor ch_idx = 1:length(channels)
+        [ch_ocv_results{ch_idx}, ch_static_results{ch_idx}] = process_one_channel_ocv( ...
+            channels{ch_idx}, rpt_cycles, ExperimentalDataPath, saveDir_OCV, ...
+            ocv_conditions, ocv_steps, static_capacity_step);
     end
-
-    % Save figure
-    figName = fullfile(saveDir_OCV, sprintf('%s_OCV.fig', channel));
-    savefig(gcf, figName);
-    close(gcf);  % 그래프 창 닫기
-    fprintf('Saved: %s\n', figName);
+else
+    for ch_idx = 1:length(channels)
+        [ch_ocv_results{ch_idx}, ch_static_results{ch_idx}] = process_one_channel_ocv( ...
+            channels{ch_idx}, rpt_cycles, ExperimentalDataPath, saveDir_OCV, ...
+            ocv_conditions, ocv_steps, static_capacity_step);
+    end
 end
 
+% Gather into structs
+for ch_idx = 1:length(channels)
+    channel = channels{ch_idx};
+    channel_ocv_data.(channel) = ch_ocv_results{ch_idx};
+    channel_static_capacity_data.(channel) = ch_static_results{ch_idx};
+    if ~useParallel
+        fprintf('Saved: %s\n', fullfile(saveDir_OCV, sprintf('%s_OCV.fig', channel)));
+    end
+end
+if useParallel
+    fprintf('Saved OCV figures: %s\n', saveDir_OCV);
+end
+
+fprintf('Building Average OCV by Cycle...\n');
 % Figure 2: Average OCV for each cycle separately (Approach A)
 figure('Name', 'Average OCV by Cycle', 'Position', [100 100 1200 800]);
 hold on;
@@ -202,10 +154,11 @@ legend('Location', 'best');
 grid on;
 xlim([0 100]);
 
-% Save average OCV
+% Save average OCV (compact = faster/smaller)
 figName = fullfile(saveDir_OCV, 'Average_OCV_by_Cycle.fig');
+fprintf('Saving %s...\n', 'Average_OCV_by_Cycle.fig');
 savefig(gcf, figName);
-close(gcf);  % 그래프 창 닫기
+close(gcf);
 fprintf('Saved: %s\n', figName);
 
 % Create OCV functions with sorted data - Dynamic
@@ -284,9 +237,9 @@ for rpt_idx = 1:length(rpt_cycles)
     OCV_Q_func_data.(field_name) = @(q_query) interp1(q_grid_data.(field_name), avg_ocv_sorted, q_query, 'linear');
 end
 
-% Save OCV arrays and metadata to MAT for later use - Dynamic
+fprintf('Building OCV_data struct...\n');
+% Save OCV arrays and metadata to MAT for later use - Dynamic (soc/ocv grid removed; use RPT_VQ_grid for V-grid data)
 OCV_data = struct();
-OCV_data.soc_grid = soc_grid_sorted;
 
 % Add dynamic data for each cycle
 for rpt_idx = 1:length(rpt_cycles)
@@ -363,7 +316,6 @@ for rpt_idx = 1:length(rpt_cycles)
     rpt_cycle = rpt_cycles{rpt_idx};
     field_name = sprintf('cyc%s', rpt_cycle(1:end-3)); % Remove 'cyc' suffix
     
-    OCV_integrated_data.(field_name).SOC_grid = soc_grid_sorted;
     OCV_integrated_data.(field_name).V_avg_SOC = V_avg_SOC_data.(field_name);
     OCV_integrated_data.(field_name).OCV_SOC_func = OCV_SOC_func_data.(field_name);
     OCV_integrated_data.(field_name).mean_capacity = mean_capacity_data.(field_name);
@@ -383,6 +335,37 @@ for rpt_idx = 1:length(rpt_cycles)
     end
     OCV_integrated_data.(field_name).individual_ocv_capacity = individual_ocv_capacity;  % 1x8 array
     OCV_integrated_data.(field_name).individual_static_capacity = individual_static_capacity;  % 1x8 array
+    
+    % T1(℃): 채널별 OCV 구간 시계열 (charge step + discharge step 순서)
+    OCV_integrated_data.(field_name).T1 = struct();
+    for ch_idx = 1:length(channels)
+        channel = channels{ch_idx};
+        filepath = fullfile(ExperimentalDataPath, sprintf('%s_RPT_%s.csv', channel, rpt_cycle));
+        if ~isfile(filepath)
+            OCV_integrated_data.(field_name).T1.(channel) = [];
+            continue;
+        end
+        try
+            Tc = readtable(filepath, 'VariableNamingRule', 'preserve');
+        catch
+            OCV_integrated_data.(field_name).T1.(channel) = [];
+            continue;
+        end
+        t1Col = [];
+        for j = 1:numel(Tc.Properties.VariableNames)
+            if contains(lower(char(Tc.Properties.VariableNames{j})), 't1')
+                t1Col = j; break;
+            end
+        end
+        if isempty(t1Col)
+            OCV_integrated_data.(field_name).T1.(channel) = [];
+            continue;
+        end
+        ch_mask = (Tc{:,2} == ocv_steps(1)) & (Tc{:,4} == 2);
+        dch_mask = (Tc{:,2} == ocv_steps(2)) & (Tc{:,4} == 2);
+        t1_vals = [Tc{ch_mask, t1Col}; Tc{dch_mask, t1Col}];
+        OCV_integrated_data.(field_name).T1.(channel) = double(t1_vals(:));  % 시계열 [℃]
+    end
 end
 
 % 통합 OCV 시각화 - Dynamic
@@ -402,10 +385,11 @@ grid on;
 xlim([0 100]);
 legend('Location', 'best');
 
-% 통합 그래프 저장
+% 통합 그래프 저장 (compact = faster/smaller)
 figName = fullfile(saveDir_OCV, 'Integrated_OCV_8cell_Average.fig');
+fprintf('Saving Integrated_OCV_8cell_Average.fig...\n');
 savefig(gcf, figName);
-close(gcf);  % 그래프 창 닫기
+close(gcf);
 fprintf('Saved: %s\n', figName);
 
 % 통합 데이터를 OCV_data에 추가 - Dynamic
@@ -417,7 +401,8 @@ end
 
 
 matSaveFile = fullfile(saveDir_OCV, 'OCV_integrated.mat');
-save(matSaveFile, 'OCV_data');
+fprintf('Saving OCV_integrated.mat...\n');
+save(matSaveFile, 'OCV_data', '-v7');
 fprintf('Saved OCV data MAT: %s\n', matSaveFile);
 
 %% ========================================================================
@@ -435,84 +420,70 @@ crate_steps_discharge = [48 52 56 60 64];   %0.1C 0.5C 1C 2C 3C
 % crate_grid_points = 200; % Removed
 
 Crate_data = struct();
+crate_cell = cell(length(channels), 1);
 
-% 채널별 처리
-for ch_idx = 1:length(channels)
-    channel = channels{ch_idx};
-    channel_key = sprintf('Ch%s', channel(3:end));
-    Crate_data.(channel_key) = struct();
-    
-    for rpt_idx = 1:length(rpt_cycles)
-        rpt_cycle = rpt_cycles{rpt_idx};
-        cycle_key = sprintf('cyc%s', rpt_cycle(1:end-3)); % 0cyc -> cyc0 등
-        
-        % Ch14 RPT800cyc 스킵 (실험 중단)
-        if strcmp(channel, 'Ch14') && strcmp(rpt_cycle, '800cyc')
-            fprintf('Skipping C-rate: Ch14 RPT800cyc\n');
-            continue;
-        end
-        
-        filename = sprintf('%s_RPT_%s.csv', channel, rpt_cycle);
-        filepath = fullfile(ExperimentalDataPath, filename);
-        if ~isfile(filepath)
-            fprintf('Warning: File not found - %s (skipping C-rate)\n', filename);
-            continue;
-        end
-        try
-            % Use readtable with 'preserve' to safely access Current, Voltage, Capacity columns
-            T = readtable(filepath, 'VariableNamingRule', 'preserve');
-        catch ME
-            fprintf('Warning: Unable to read file - %s (skipping C-rate)\n', filename);
-            fprintf('  Error: %s\n', ME.message);
-            continue;
-        end
-        
-        % 구조 초기화
-        Crate_data.(channel_key).(cycle_key) = struct();
-        
-        for r = 1:length(crate_labels)
-            label = crate_labels{r};
-            step_chg = crate_steps_charge(r);
-            step_dch = crate_steps_discharge(r);
-            
-            % Charge
-            mask_chg = (T.("Step Index") == step_chg);
-            V_chg = T.("Voltage(V)")(mask_chg);
-            I_chg = T.("Current(A)")(mask_chg);
-            Q_chg = T.("Capacity(Ah)")(mask_chg);
-            if any(strcmp('Time', T.Properties.VariableNames))
-                t_chg = T.("Time")(mask_chg);
-            else
-                t_chg = [];
-            end
-            
-            % Discharge
-            mask_dch = (T.("Step Index") == step_dch);
-            V_dch = T.("Voltage(V)")(mask_dch);
-            I_dch = T.("Current(A)")(mask_dch);
-            Q_dch = T.("Capacity(Ah)")(mask_dch);
-            if any(strcmp('Time', T.Properties.VariableNames))
-                t_dch = T.("Time")(mask_dch);
-            else
-                t_dch = [];
-            end
-            
-            % Save Raw Data (No interpolation)
-            charge_struct = struct('V', V_chg, 'I', I_chg, 'Q', Q_chg, 't', t_chg);
-            discharge_struct = struct('V', V_dch, 'I', I_dch, 'Q', Q_dch, 't', t_dch);
-            
-            Crate_data.(channel_key).(cycle_key).(label).charge = charge_struct;
-            Crate_data.(channel_key).(cycle_key).(label).discharge = discharge_struct;
-        end
+% 채널별 처리 (병렬 가능)
+if useParallel
+    parfor ch_idx = 1:length(channels)
+        crate_cell{ch_idx} = process_one_channel_crate(ch_idx, channels, rpt_cycles, ...
+            ExperimentalDataPath, crate_labels, crate_steps_charge, crate_steps_discharge);
     end
+else
+    for ch_idx = 1:length(channels)
+        crate_cell{ch_idx} = process_one_channel_crate(ch_idx, channels, rpt_cycles, ...
+            ExperimentalDataPath, crate_labels, crate_steps_charge, crate_steps_discharge);
+    end
+end
+for ch_idx = 1:length(channels)
+    Crate_data.(sprintf('Ch%s', channels{ch_idx}(3:end))) = crate_cell{ch_idx};
 end
 
 % Removed 8-channel averaging (total8) as it relied on common grid interpolation which is now removed.
 
 % Save C-rate data
 matSaveFile_Crate = fullfile(saveDir_Crate, 'Crate_integrated.mat');
-save(matSaveFile_Crate, 'Crate_data');
+fprintf('Saving Crate_integrated.mat...\n');
+save(matSaveFile_Crate, 'Crate_data', '-v7');
 fprintf('Saved C-rate data MAT: %s\n', matSaveFile_Crate);
+
+%% ========================================================================
+%  V-grid Interpolation (0.001 V spacing, no extrapolation)
+%  Structure: cyc0 -> Ch09..Ch16, cyc200 -> Ch09..Ch16, ...
+%  Each channel: Static, OCV_charge, OCV_discharge, c01_charge, c01_discharge, ... c3_discharge
+%  interp1(V, Q, V_grid, 'linear'); V_grid = min(V):0.001:max(V)
+% =========================================================================
+fprintf('\n=== V-grid Interpolation (Static, OCV, C-rate) ===\n');
+dV = 0.001;  % V-grid spacing [V]
+
+RPT_VQ_grid = struct();
+for rpt_idx = 1:length(rpt_cycles)
+    rpt_cycle = rpt_cycles{rpt_idx};
+    cycle_key = sprintf('cyc%s', rpt_cycle(1:end-3));
+    RPT_VQ_grid.(cycle_key) = struct();
+    ch_grid_cell = cell(length(channels), 1);
+    if useParallel
+        parfor ch_idx = 1:length(channels)
+            ch_grid_cell{ch_idx} = process_one_channel_vgrid(channels{ch_idx}, cycle_key, rpt_cycle, ...
+                ExperimentalDataPath, Crate_data, static_capacity_step, ocv_steps, crate_labels, dV);
+        end
+    else
+        for ch_idx = 1:length(channels)
+            ch_grid_cell{ch_idx} = process_one_channel_vgrid(channels{ch_idx}, cycle_key, rpt_cycle, ...
+                ExperimentalDataPath, Crate_data, static_capacity_step, ocv_steps, crate_labels, dV);
+        end
+    end
+    for ch_idx = 1:length(channels)
+        RPT_VQ_grid.(cycle_key).(channels{ch_idx}) = ch_grid_cell{ch_idx};
+    end
+end
+
+% T1(℃)는 V,I,Q와 동일한 곳에서 읽어 저장됨: process_one_channel_vgrid(Static/OCV), process_one_channel_crate(C-rate) → RPT_VQ_grid 각 구간에 T1_raw, T1 포함
+
+% Save RPT_VQ_grid (V-grid interpolated, no extrapolation)
+matSaveFile_VQ = fullfile(saveDir_OCV, 'RPT_VQ_grid.mat');
+fprintf('Saving RPT_VQ_grid.mat...\n');
+save(matSaveFile_VQ, 'RPT_VQ_grid', '-v7');
+fprintf('Saved RPT_VQ_grid MAT: %s\n', matSaveFile_VQ);
 
 %% ========================================================================
 %  C-rate Visualization (Capacity vs Voltage)
@@ -526,6 +497,7 @@ rate_names = {'0.1C','0.5C','1C','2C','3C'};
 rate_labels = crate_labels;  % {'c01','c05','c1','c2','c3'}
 
 for ch_idx = 1:length(channels)
+    fprintf('  C-rate figures: %s\n', channels{ch_idx});
     channel = channels{ch_idx};
     channel_key = sprintf('Ch%s', channel(3:end));
     

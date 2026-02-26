@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:pPr><w:pStyle w:val="code"/></w:pPr><w:r><w:t><![CDATA[classdef app1 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure                  matlab.ui.Figure
+        NormalizationCheckBox     matlab.ui.control.CheckBox
+        StandardizationCheckBox   matlab.ui.control.CheckBox
+        FineTuningOnOffCheckBox   matlab.ui.control.CheckBox
+        StatusLamp_3              matlab.ui.control.Lamp
+        StatusLamp_3Label         matlab.ui.control.Label
+        Tree_3                    matlab.ui.container.CheckBoxTree
+        DynamicNode               matlab.ui.container.TreeNode
+        R1secNode                 matlab.ui.container.TreeNode
+        R3secNode                 matlab.ui.container.TreeNode
+        R5secNode                 matlab.ui.container.TreeNode
+        R10secNode                matlab.ui.container.TreeNode
+        R30secNode                matlab.ui.container.TreeNode
+        DCIRChgDchgNode_2         matlab.ui.container.TreeNode
+        EquilibriumNode           matlab.ui.container.TreeNode
+        EnergyEfficientyNode      matlab.ui.container.TreeNode
+        DriveCycle2ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle3ShallowNode_3  matlab.ui.container.TreeNode
+        DriveCycle4ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle5ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle6ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle7ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle8ShallowNode_2  matlab.ui.container.TreeNode
+        LabelNode                 matlab.ui.container.TreeNode
+        AvailableCapacityAhNode   matlab.ui.container.TreeNode
+        EmergyEfficiencyNode      matlab.ui.container.TreeNode
+        AgingModeNode             matlab.ui.container.TreeNode
+        LLINode                   matlab.ui.container.TreeNode
+        LAMpNode                  matlab.ui.container.TreeNode
+        Gauge_2                   matlab.ui.control.LinearGauge
+        Gauge                     matlab.ui.control.LinearGauge
+        Tree_2                    matlab.ui.container.CheckBoxTree
+        RandomForestNode          matlab.ui.container.TreeNode
+        SupportVectorMachineNode  matlab.ui.container.TreeNode
+        LSTMNode                  matlab.ui.container.TreeNode
+        TransferLearningNode      matlab.ui.container.TreeNode
+        Tree                      matlab.ui.container.CheckBoxTree
+        RPTNode                   matlab.ui.container.TreeNode
+        StaticCapacityDchgNode    matlab.ui.container.TreeNode
+        OCVChgDchgNode            matlab.ui.container.TreeNode
+        DCIRChgDchgNode           matlab.ui.container.TreeNode
+        DriveCycleNode            matlab.ui.container.TreeNode
+        DriveCycle1ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle2ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle3ShallowNode_2  matlab.ui.container.TreeNode
+        DriveCycle4ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle5ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle6ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle7ShallowNode    matlab.ui.container.TreeNode
+        DriveCycle8ShallowNode    matlab.ui.container.TreeNode
+        StatusLamp_2              matlab.ui.control.Lamp
+        StatusLamp_2Label         matlab.ui.control.Label
+        DeploymentButton          matlab.ui.control.StateButton
+        ModelButton               matlab.ui.control.StateButton
+        FeaturesLabelsButton      matlab.ui.control.StateButton
+        StatusLamp                matlab.ui.control.Lamp
+        StatusLampLabel           matlab.ui.control.Label
+        DataLoadButton            matlab.ui.control.StateButton
+    end
+
+    % Component initialization
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure and hide until all components are created
+            app.UIFigure = uifigure('Visible', 'off');
+            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Name = 'MATLAB App';
+
+            % Create DataLoadButton
+            app.DataLoadButton = uibutton(app.UIFigure, 'state');
+            app.DataLoadButton.Text = 'Data Load';
+            app.DataLoadButton.Position = [42 425 100 23];
+
+            % Create StatusLampLabel
+            app.StatusLampLabel = uilabel(app.UIFigure);
+            app.StatusLampLabel.HorizontalAlignment = 'right';
+            app.StatusLampLabel.Position = [403 425 39 22];
+            app.StatusLampLabel.Text = 'Status';
+
+            % Create StatusLamp
+            app.StatusLamp = uilamp(app.UIFigure);
+            app.StatusLamp.Position = [457 425 20 20];
+
+            % Create FeaturesLabelsButton
+            app.FeaturesLabelsButton = uibutton(app.UIFigure, 'state');
+            app.FeaturesLabelsButton.Text = {'Features &'; 'Labels'};
+            app.FeaturesLabelsButton.Position = [42 321 100 38];
+
+            % Create ModelButton
+            app.ModelButton = uibutton(app.UIFigure, 'state');
+            app.ModelButton.Text = 'Model';
+            app.ModelButton.Position = [42 205 100 23];
+
+            % Create DeploymentButton
+            app.DeploymentButton = uibutton(app.UIFigure, 'state');
+            app.DeploymentButton.Text = 'Deployment';
+            app.DeploymentButton.Position = [42 28 100 23];
+
+            % Create StatusLamp_2Label
+            app.StatusLamp_2Label = uilabel(app.UIFigure);
+            app.StatusLamp_2Label.HorizontalAlignment = 'right';
+            app.StatusLamp_2Label.Position = [168 28 39 22];
+            app.StatusLamp_2Label.Text = 'Status';
+
+            % Create StatusLamp_2
+            app.StatusLamp_2 = uilamp(app.UIFigure);
+            app.StatusLamp_2.Position = [222 28 20 20];
+
+            % Create Tree
+            app.Tree = uitree(app.UIFigure, 'checkbox');
+            app.Tree.Position = [168 386 204 62];
+
+            % Create RPTNode
+            app.RPTNode = uitreenode(app.Tree);
+            app.RPTNode.Text = 'RPT';
+
+            % Create StaticCapacityDchgNode
+            app.StaticCapacityDchgNode = uitreenode(app.RPTNode);
+            app.StaticCapacityDchgNode.Text = 'Static Capacity (Dchg)';
+
+            % Create OCVChgDchgNode
+            app.OCVChgDchgNode = uitreenode(app.RPTNode);
+            app.OCVChgDchgNode.Text = 'OCV (Chg, Dchg)';
+
+            % Create DCIRChgDchgNode
+            app.DCIRChgDchgNode = uitreenode(app.RPTNode);
+            app.DCIRChgDchgNode.Text = 'DCIR (Chg, Dchg)';
+
+            % Create DriveCycleNode
+            app.DriveCycleNode = uitreenode(app.Tree);
+            app.DriveCycleNode.Text = 'Drive Cycle';
+
+            % Create DriveCycle1ShallowNode
+            app.DriveCycle1ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle1ShallowNode.Text = 'Drive Cycle 1 (Shallow)';
+
+            % Create DriveCycle2ShallowNode
+            app.DriveCycle2ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle2ShallowNode.Text = 'Drive Cycle 2 (Shallow)';
+
+            % Create DriveCycle3ShallowNode_2
+            app.DriveCycle3ShallowNode_2 = uitreenode(app.DriveCycleNode);
+            app.DriveCycle3ShallowNode_2.Text = 'Drive Cycle 3 (Shallow)';
+
+            % Create DriveCycle4ShallowNode
+            app.DriveCycle4ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle4ShallowNode.Text = 'Drive Cycle 4 (Shallow)';
+
+            % Create DriveCycle5ShallowNode
+            app.DriveCycle5ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle5ShallowNode.Text = 'Drive Cycle 5 (Shallow)';
+
+            % Create DriveCycle6ShallowNode
+            app.DriveCycle6ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle6ShallowNode.Text = 'Drive Cycle 6 (Shallow)';
+
+            % Create DriveCycle7ShallowNode
+            app.DriveCycle7ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle7ShallowNode.Text = 'Drive Cycle 7 (Shallow)';
+
+            % Create DriveCycle8ShallowNode
+            app.DriveCycle8ShallowNode = uitreenode(app.DriveCycleNode);
+            app.DriveCycle8ShallowNode.Text = 'Drive Cycle 8 (Shallow)';
+
+            % Create Tree_2
+            app.Tree_2 = uitree(app.UIFigure, 'checkbox');
+            app.Tree_2.Position = [168 122 204 106];
+
+            % Create RandomForestNode
+            app.RandomForestNode = uitreenode(app.Tree_2);
+            app.RandomForestNode.Text = 'Random Forest';
+
+            % Create SupportVectorMachineNode
+            app.SupportVectorMachineNode = uitreenode(app.Tree_2);
+            app.SupportVectorMachineNode.Text = 'Support Vector Machine';
+
+            % Create LSTMNode
+            app.LSTMNode = uitreenode(app.Tree_2);
+            app.LSTMNode.Text = 'LSTM';
+
+            % Create TransferLearningNode
+            app.TransferLearningNode = uitreenode(app.Tree_2);
+            app.TransferLearningNode.Text = 'Transfer Learning';
+
+            % Create Gauge
+            app.Gauge = uigauge(app.UIFigure, 'linear');
+            app.Gauge.Position = [403 122 119 41];
+
+            % Create Gauge_2
+            app.Gauge_2 = uigauge(app.UIFigure, 'linear');
+            app.Gauge_2.Position = [403 22 119 41];
+
+            % Create Tree_3
+            app.Tree_3 = uitree(app.UIFigure, 'checkbox');
+            app.Tree_3.Position = [168 262 204 97];
+
+            % Create DynamicNode
+            app.DynamicNode = uitreenode(app.Tree_3);
+            app.DynamicNode.Text = 'Dynamic';
+
+            % Create R1secNode
+            app.R1secNode = uitreenode(app.DynamicNode);
+            app.R1secNode.Text = 'R1sec';
+
+            % Create R3secNode
+            app.R3secNode = uitreenode(app.DynamicNode);
+            app.R3secNode.Text = 'R3sec';
+
+            % Create R5secNode
+            app.R5secNode = uitreenode(app.DynamicNode);
+            app.R5secNode.Text = 'R5sec';
+
+            % Create R10secNode
+            app.R10secNode = uitreenode(app.DynamicNode);
+            app.R10secNode.Text = 'R10sec';
+
+            % Create R30secNode
+            app.R30secNode = uitreenode(app.DynamicNode);
+            app.R30secNode.Text = 'R30sec';
+
+            % Create DCIRChgDchgNode_2
+            app.DCIRChgDchgNode_2 = uitreenode(app.DynamicNode);
+            app.DCIRChgDchgNode_2.Text = 'DCIR (Chg, Dchg)';
+
+            % Create EquilibriumNode
+            app.EquilibriumNode = uitreenode(app.Tree_3);
+            app.EquilibriumNode.Text = 'Equilibrium';
+
+            % Create EnergyEfficientyNode
+            app.EnergyEfficientyNode = uitreenode(app.EquilibriumNode);
+            app.EnergyEfficientyNode.Text = 'Energy Efficienty';
+
+            % Create DriveCycle2ShallowNode_2
+            app.DriveCycle2ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle2ShallowNode_2.Text = 'Drive Cycle 2 (Shallow)';
+
+            % Create DriveCycle3ShallowNode_3
+            app.DriveCycle3ShallowNode_3 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle3ShallowNode_3.Text = 'Drive Cycle 3 (Shallow)';
+
+            % Create DriveCycle4ShallowNode_2
+            app.DriveCycle4ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle4ShallowNode_2.Text = 'Drive Cycle 4 (Shallow)';
+
+            % Create DriveCycle5ShallowNode_2
+            app.DriveCycle5ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle5ShallowNode_2.Text = 'Drive Cycle 5 (Shallow)';
+
+            % Create DriveCycle6ShallowNode_2
+            app.DriveCycle6ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle6ShallowNode_2.Text = 'Drive Cycle 6 (Shallow)';
+
+            % Create DriveCycle7ShallowNode_2
+            app.DriveCycle7ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle7ShallowNode_2.Text = 'Drive Cycle 7 (Shallow)';
+
+            % Create DriveCycle8ShallowNode_2
+            app.DriveCycle8ShallowNode_2 = uitreenode(app.EquilibriumNode);
+            app.DriveCycle8ShallowNode_2.Text = 'Drive Cycle 8 (Shallow)';
+
+            % Create LabelNode
+            app.LabelNode = uitreenode(app.Tree_3);
+            app.LabelNode.Text = 'Label';
+
+            % Create AvailableCapacityAhNode
+            app.AvailableCapacityAhNode = uitreenode(app.LabelNode);
+            app.AvailableCapacityAhNode.Text = 'Available Capacity (Ah)';
+
+            % Create EmergyEfficiencyNode
+            app.EmergyEfficiencyNode = uitreenode(app.LabelNode);
+            app.EmergyEfficiencyNode.Text = 'Emergy Efficiency';
+
+            % Create AgingModeNode
+            app.AgingModeNode = uitreenode(app.LabelNode);
+            app.AgingModeNode.Text = 'Aging Mode';
+
+            % Create LLINode
+            app.LLINode = uitreenode(app.AgingModeNode);
+            app.LLINode.Text = 'LLI';
+
+            % Create LAMpNode
+            app.LAMpNode = uitreenode(app.AgingModeNode);
+            app.LAMpNode.Text = 'LAMp';
+
+            % Create StatusLamp_3Label
+            app.StatusLamp_3Label = uilabel(app.UIFigure);
+            app.StatusLamp_3Label.HorizontalAlignment = 'right';
+            app.StatusLamp_3Label.Position = [403 336 39 22];
+            app.StatusLamp_3Label.Text = 'Status';
+
+            % Create StatusLamp_3
+            app.StatusLamp_3 = uilamp(app.UIFigure);
+            app.StatusLamp_3.Position = [457 336 20 20];
+
+            % Create FineTuningOnOffCheckBox
+            app.FineTuningOnOffCheckBox = uicheckbox(app.UIFigure);
+            app.FineTuningOnOffCheckBox.Text = 'Fine Tuning On/Off';
+            app.FineTuningOnOffCheckBox.Position = [405 205 123 22];
+
+            % Create StandardizationCheckBox
+            app.StandardizationCheckBox = uicheckbox(app.UIFigure);
+            app.StandardizationCheckBox.Text = 'Standardization';
+            app.StandardizationCheckBox.Position = [405 176 105 22];
+
+            % Create NormalizationCheckBox
+            app.NormalizationCheckBox = uicheckbox(app.UIFigure);
+            app.NormalizationCheckBox.Text = 'Normalization';
+            app.NormalizationCheckBox.Position = [527 176 95 22];
+
+            % Show the figure after all components are created
+            app.UIFigure.Visible = 'on';
+        end
+    end
+
+    % App creation and deletion
+    methods (Access = public)
+
+        % Construct app
+        function app = app1
+
+            % Create UIFigure and components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end]]></w:t></w:r></w:p></w:body></w:document>

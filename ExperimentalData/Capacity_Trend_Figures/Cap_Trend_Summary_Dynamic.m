@@ -22,11 +22,27 @@ chList = {'09', '10', '11', '12', '13', '14', '15', '16'};  % Modify as needed
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Define RPT cycles to analyze (can be easily modified)
-rptCycles = [0, 200, 400, 600, 800, 1000];  % Add more cycles here as needed
+rptCycles = [0, 200, 400, 600, 800, 1000, 1200];  % All possible cycles
 
 %% Define Aging cycles to analyze (can be easily modified)
-agingCycles = [0, 200, 400, 600, 800, 1000];  % Start and end cycles for each aging period
+agingCycles = [0, 200, 400, 600, 800, 1000, 1200];  % Start and end cycles for each aging period
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Channel-wise RPT data availability (from DOE table: X = no data, do not load/save)
+% Ch12, Ch14, Ch15, Ch16: RPT available only up to 800cyc (no 1000, 1200)
+chRptCyclesAvailable = struct();
+chRptCyclesAvailable.Ch09 = [0, 200, 400, 600, 800, 1000, 1200];
+chRptCyclesAvailable.Ch10 = [0, 200, 400, 600, 800, 1000, 1200];
+chRptCyclesAvailable.Ch11 = [0, 200, 400, 600, 800, 1000, 1200];
+chRptCyclesAvailable.Ch12 = [0, 200, 400, 600, 800];  % no 1000, 1200
+chRptCyclesAvailable.Ch13 = [0, 200, 400, 600, 800, 1000, 1200];
+chRptCyclesAvailable.Ch14 = [0, 200, 400, 600];  % no 800, 1000, 1200
+chRptCyclesAvailable.Ch15 = [0, 200, 400, 600, 800];  % no 1000, 1200
+chRptCyclesAvailable.Ch16 = [0, 200, 400, 600, 800];  % no 1000, 1200
+
+% Parallel processing (set false or numWorkers 0 to run sequentially)
+useParallel = true;
+numWorkers = 4;  % number of workers (0 = use default max)
 
 % Fig color
 color_static = '#CD534C';
@@ -57,6 +73,28 @@ function [Q_static, Q_ocv, success] = loadRPTData(rptFolder, ch, cycle)
     mask_ocv = (T_rpt(:,2) == 10) & (T_rpt(:,4) == 2);
     Q_ocv = T_rpt(mask_ocv, 9);
     Q_ocv = Q_ocv(end);
+    success = true;
+end
+
+% Function to load RPT Static V-Q curve (col 8 = V, col 9 = Q)
+function [V, Q, success] = loadRPTStaticVQ(rptFolder, ch, cycle)
+    rptFile = fullfile(rptFolder, sprintf('Ch%s_RPT_%dcyc.csv', ch, cycle));
+    if ~isfile(rptFile)
+        V = [];
+        Q = [];
+        success = false;
+        return;
+    end
+    T_rpt = readmatrix(rptFile);
+    mask_static = (T_rpt(:,2) == 3) & (T_rpt(:,4) == 2);
+    V = T_rpt(mask_static, 8);  % Voltage
+    Q = T_rpt(mask_static, 9);  % Capacity
+    if isempty(V) || isempty(Q)
+        V = [];
+        Q = [];
+        success = false;
+        return;
+    end
     success = true;
 end
 
@@ -121,27 +159,71 @@ end
 % Process Each Channel
 % =========================================================================
 
-% Initialize structure to store capacity data for all channels
-allChannelsCapacity = struct();
+% Start parallel pool if requested (requires Parallel Computing Toolbox)
+usePar = false;
+if useParallel && numWorkers > 0
+    try
+        pool = gcp('nocreate');
+        if isempty(pool) || pool.NumWorkers < numWorkers
+            if ~isempty(pool), delete(pool); end
+            parpool('local', numWorkers);
+        end
+        usePar = true;
+    catch
+        fprintf('Parallel pool not available, running sequentially.\n');
+    end
+end
 
-for chIdx = 1:length(chList)
+% Initialize storage for channel results (used for both for/parfor)
+resultCell = cell(length(chList), 1);
+
+if usePar
+    parfor chIdx = 1:length(chList)
+        resultCell{chIdx} = processOneChannel(chIdx, chList, chRptCyclesAvailable, rptCycles, agingCycles, ...
+            rptFolder, agingFolder, saveFolder, color_static, color_ocv, color_aging);
+    end
+else
+    for chIdx = 1:length(chList)
+        resultCell{chIdx} = processOneChannel(chIdx, chList, chRptCyclesAvailable, rptCycles, agingCycles, ...
+            rptFolder, agingFolder, saveFolder, color_static, color_ocv, color_aging);
+    end
+end
+
+% Build allChannelsCapacity from results
+allChannelsCapacity = struct();
+for i = 1:length(chList)
+    allChannelsCapacity.(sprintf('Ch%s', resultCell{i}.ch)) = resultCell{i}.channelCapacity;
+end
+
+function out = processOneChannel(chIdx, chList, chRptCyclesAvailable, rptCycles, agingCycles, ...
+        rptFolder, agingFolder, saveFolder, color_static, color_ocv, color_aging)
     ch = chList{chIdx};
     fprintf('Processing Channel %s...\n', ch);
     
-    % Initialize structure for this channel
+    % RPT cycles available for this channel (from DOE table; do not load/save unavailable)
+    chKey = sprintf('Ch%s', ch);
+    if isfield(chRptCyclesAvailable, chKey)
+        rptCyclesThisCh = chRptCyclesAvailable.(chKey);
+    else
+        rptCyclesThisCh = rptCycles;
+    end
+    % Aging periods: only up to this channel's max RPT cycle
+    agingCyclesThisCh = agingCycles(agingCycles <= max(rptCyclesThisCh));
+    
+    % Initialize structure for this channel (Static Capacity only: V-Q at 0.001V)
     channelCapacity = struct();
     channelCapacity.cycles = [];
-    channelCapacity.capacity = [];  % Static Capacity
-    channelCapacity.capacity_ocv = [];  % OCV Capacity
+    channelCapacity.V = {};  % Cell array: V at 0.001V spacing per RPT cycle
+    channelCapacity.Q = {};  % Cell array: Q interpolated at those V
     
 % =========================================================================
 % Load All Data Dynamically
 % =========================================================================
 
-% Load RPT data
+% Load RPT data (only cycles available for this channel)
 rptData = struct();
-for i = 1:length(rptCycles)
-    cycle = rptCycles(i);
+for i = 1:length(rptCyclesThisCh)
+    cycle = rptCyclesThisCh(i);
     [Q_static, Q_ocv, success] = loadRPTData(rptFolder, ch, cycle);
     if success
         rptData.(sprintf('cycle_%d', cycle)) = struct('static', Q_static, 'ocv', Q_ocv);
@@ -150,11 +232,11 @@ for i = 1:length(rptCycles)
     end
 end
 
-% Load Aging data
+% Load Aging data (only periods available for this channel)
 agingData = struct();
-for i = 1:length(agingCycles)-1
-    startCycle = agingCycles(i);
-    endCycle = agingCycles(i+1);
+for i = 1:length(agingCyclesThisCh)-1
+    startCycle = agingCyclesThisCh(i);
+    endCycle = agingCyclesThisCh(i+1);
     [Q_aging, maxCycle, actualMaxCycle, success] = loadAgingData(agingFolder, ch, startCycle, endCycle);
     if success
         agingData.(sprintf('period_%dto%d', startCycle, endCycle)) = struct('capacity', Q_aging, 'maxCycle', maxCycle, 'actualMaxCycle', actualMaxCycle);
@@ -174,15 +256,30 @@ y_vals = [];
 plotInfo = struct();
 
 % Add RPT data points
-for i = 1:length(rptCycles)
-    cycle = rptCycles(i);
+for i = 1:length(rptCyclesThisCh)
+    cycle = rptCyclesThisCh(i);
     rptKey = sprintf('cycle_%d', cycle);
     
-    % Collect RPT Static and OCV Capacity data
+    % Collect RPT Static V-Q only: load V,Q and interpolate at 0.001V
     if isfield(rptData, rptKey)
-        channelCapacity.cycles = [channelCapacity.cycles, cycle];
-        channelCapacity.capacity = [channelCapacity.capacity, rptData.(rptKey).static];
-        channelCapacity.capacity_ocv = [channelCapacity.capacity_ocv, rptData.(rptKey).ocv];
+        [V_raw, Q_raw, ok] = loadRPTStaticVQ(rptFolder, ch, cycle);
+        if ok && numel(V_raw) > 1
+            V_raw = V_raw(:);
+            Q_raw = Q_raw(:);
+            [V_sorted, ord] = sort(V_raw, 'descend');  % discharge: high V -> low V
+            Q_sorted = Q_raw(ord);
+            % Remove duplicate V (interp1 requires unique sample points)
+            [V_unique, ia] = unique(V_sorted, 'stable');
+            Q_unique = Q_sorted(ia);
+            if numel(V_unique) < 2
+                continue;
+            end
+            V_grid = (max(V_unique):-0.001:min(V_unique))';
+            Q_interp = interp1(V_unique, Q_unique, V_grid, 'linear');
+            channelCapacity.cycles = [channelCapacity.cycles, cycle];
+            channelCapacity.V{end+1} = V_grid;
+            channelCapacity.Q{end+1} = Q_interp;
+        end
     end
     
     % Static
@@ -202,9 +299,9 @@ for i = 1:length(rptCycles)
     end
     
     % Add aging data between RPTs
-    if i < length(rptCycles)
+    if i < length(rptCyclesThisCh)
         startCycle = cycle;
-        endCycle = rptCycles(i+1);
+        endCycle = rptCyclesThisCh(i+1);
         agingKey = sprintf('period_%dto%d', startCycle, endCycle);
         
         if isfield(agingData, agingKey)
@@ -224,11 +321,11 @@ for i = 1:length(rptCycles)
 end
 
 % Add aging data after last RPT (if exists)
-if length(agingCycles) > length(rptCycles)
-    lastRPT = rptCycles(end);
-    for i = length(rptCycles):length(agingCycles)-1
-        startCycle = agingCycles(i);
-        endCycle = agingCycles(i+1);
+if length(agingCyclesThisCh) > length(rptCyclesThisCh)
+    lastRPT = rptCyclesThisCh(end);
+    for i = length(rptCyclesThisCh):length(agingCyclesThisCh)-1
+        startCycle = agingCyclesThisCh(i);
+        endCycle = agingCyclesThisCh(i+1);
         agingKey = sprintf('period_%dto%d', startCycle, endCycle);
         
         if isfield(agingData, agingKey)
@@ -334,8 +431,8 @@ xticks_vals = [];
 xticklabels_vals = {};
 
 % Add RPT ticks
-for i = 1:length(rptCycles)
-    cycle = rptCycles(i);
+for i = 1:length(rptCyclesThisCh)
+    cycle = rptCyclesThisCh(i);
     rptKey = sprintf('cycle_%d', cycle);
     
     % Static tick
@@ -353,9 +450,9 @@ for i = 1:length(rptCycles)
     end
     
     % Add aging ticks (first and last)
-    if i < length(rptCycles)
+    if i < length(rptCyclesThisCh)
         startCycle = cycle;
-        endCycle = rptCycles(i+1);
+        endCycle = rptCyclesThisCh(i+1);
         agingField = sprintf('aging_%dto%d', startCycle, endCycle);
         
         if isfield(plotInfo, agingField)
@@ -373,10 +470,10 @@ for i = 1:length(rptCycles)
 end
 
 % Add aging ticks after last RPT
-if length(agingCycles) > length(rptCycles)
-    for i = length(rptCycles):length(agingCycles)-1
-        startCycle = agingCycles(i);
-        endCycle = agingCycles(i+1);
+if length(agingCyclesThisCh) > length(rptCyclesThisCh)
+    for i = length(rptCyclesThisCh):length(agingCyclesThisCh)-1
+        startCycle = agingCyclesThisCh(i);
+        endCycle = agingCyclesThisCh(i+1);
         agingField = sprintf('aging_%dto%d', startCycle, endCycle);
         
         if isfield(plotInfo, agingField)
@@ -412,15 +509,17 @@ grid on;
     fprintf('Plot saved: Ch%s_Capacity_Retention.fig\n', ch);
     close(fig);  % Close figure to free memory
     
-    % Store channel capacity data
-    allChannelsCapacity.(sprintf('Ch%s', ch)) = channelCapacity;
+    out = struct('ch', ch, 'channelCapacity', channelCapacity);
 end
 
 % =========================================================================
-% Save Capacity Data to MAT File
+% Save Capacity Data to MAT File (Static only: V-Q at 0.001V)
 % =========================================================================
+% allChannelsCapacity.ChXX.cycles = [0, 200, 400, ...]
+% allChannelsCapacity.ChXX.V = {V0, V200, ...}  % 0.001V-spaced voltage
+% allChannelsCapacity.ChXX.Q = {Q0, Q200, ...}  % Q interpolated at those V
 
 save(fullfile(saveFolder, 'Capacity_Data_Static.mat'), 'allChannelsCapacity');
-fprintf('Capacity data saved to: Capacity_Data_Static.mat\n');
+fprintf('Capacity data saved to: Capacity_Data_Static.mat (Static V-Q at 0.001V)\n');
 
 fprintf('All channels processed!\n');

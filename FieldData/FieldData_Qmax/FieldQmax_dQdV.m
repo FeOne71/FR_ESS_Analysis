@@ -29,7 +29,8 @@ discharge_V_common_max = 3.90;    % Discharge 공통 전압 구간 최대값 [V]
 capacity_V_min = 3.80;             % 용량 추출 전압 구간 최소값 [V]
 capacity_V_max = 3.85;             % 용량 추출 전압 구간 최대값 [V]
 
-%% Paths
+%% Paths (필드 데이터 로드 위치)
+% 모든 필드 데이터: D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat
 % Old data format (2021)
 dataFile_2021 = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\Old\2021\202106\Raw_20210603.mat';
 

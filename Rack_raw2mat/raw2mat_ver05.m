@@ -9,7 +9,7 @@ clc; clear; close all;
 
 data_dir = 'G:\공유 드라이브\BSL_Data2\한전_김제ESS';
 save_dir = 'D:\JCW\Projects\KEPCO_ESS_Local\Rack_raw2mat\Old';
-years    =  {'202206_KIMJ','202306_KIMJ'};    %   {'202106_KIMJ'}; %,'202206_KIMJ','202306_KIMJ'};
+years    =  {'202106_KIMJ'}; %,'202306_KIMJ'};    %   {'202106_KIMJ'}; %,'202206_KIMJ','202306_KIMJ'};
 
 %% 2. Folder Traversal
 for y = 1:length(years)
@@ -143,20 +143,20 @@ for y = 1:length(years)
             Raw.(rack_field) = S;
         end
 
-        %% PLC Ambient Temperature Processing
-        fprintf('  Processing PLC Ambient Temperature...\n');
+        %% PLC Temperatures Processing
+        fprintf('  Processing PLC Temperatures...\n');
         
         % Find PLC files
         plc_files = findPLCFiles(data_dir, year_str, day_str);
         if ~isempty(plc_files)
-            % Read ambient temperature from PLC files
-            ambient_temp = readAmbientTemperature(plc_files);
-            if ~isempty(ambient_temp)
-                % Add ambient temperature to all racks
-                Raw = addAmbientToAllRacks(Raw, ambient_temp);
-                fprintf('  Ambient temperature added successfully\n');
+            % Read temperatures from PLC files
+            plc_temp_data = readPLCTemperatures(plc_files);
+            if ~isempty(plc_temp_data)
+                % Add temperatures to all racks
+                Raw = addPLCTempsToAllRacks(Raw, plc_temp_data);
+                fprintf('  PLC temperatures added successfully\n');
             else
-                fprintf('  Warning: No ambient temperature data found\n');
+                fprintf('  Warning: No PLC temperature data found\n');
             end
         else
             fprintf('  Warning: No PLC files found for %s\n', day_str);
@@ -238,8 +238,8 @@ function plc_files = findPLCFiles(data_dir, year_str, day_str)
     plc_files = plc_files_list;
 end
 
-function ambient_temp = readAmbientTemperature(plc_files)
-    % Read ambient temperature from multiple PLC files
+function temp_data = readPLCTemperatures(plc_files)
+    % Read ambient and battery temperature from multiple PLC files
     try
         all_plc_data = [];
         
@@ -258,6 +258,12 @@ function ambient_temp = readAmbientTemperature(plc_files)
                 continue;
             end
             
+            battemp_col = find(contains(plc_data.Properties.VariableNames, 'Battery Temperature', 'IgnoreCase', true));
+            if isempty(battemp_col)
+                fprintf('    Warning: No Battery Temperature column in %s\n', plc_file);
+                continue;
+            end 
+
             % Find time column
             time_col = find(contains(plc_data.Properties.VariableNames, 'Time', 'IgnoreCase', true));
             if isempty(time_col)
@@ -268,6 +274,7 @@ function ambient_temp = readAmbientTemperature(plc_files)
             % Extract time and ambient temperature data
             time_data = plc_data{:, time_col};
             ambient_data = plc_data{:, ambient_col};
+            battemp_data = plc_data{:, battemp_col};        
             
             % Convert duration to datetime with date
             if isduration(time_data)
@@ -294,7 +301,7 @@ function ambient_temp = readAmbientTemperature(plc_files)
             end
             
             % Combine data
-            file_data = table(time_data, ambient_data, 'VariableNames', {'Time', 'Ambient_Temperature'});
+            file_data = table(time_data, ambient_data, battemp_data, 'VariableNames', {'Time', 'Ambient_Temperature', 'Battery_Temperature'});
             
             if isempty(all_plc_data)
                 all_plc_data = file_data;
@@ -305,17 +312,21 @@ function ambient_temp = readAmbientTemperature(plc_files)
             fprintf('    Added %d data points from %s\n', height(file_data), plc_file);
         end
         
-        ambient_temp = all_plc_data;
-        fprintf('    Total PLC data points: %d\n', height(ambient_temp));
+        temp_data = all_plc_data;
+        if ~isempty(temp_data)
+            fprintf('    Total PLC data points: %d\n', height(temp_data));
+        else
+            fprintf('    Total PLC data points: 0\n');
+        end
         
     catch ME
         fprintf('  Error reading PLC files: %s\n', ME.message);
-        ambient_temp = [];
+        temp_data = [];
     end
 end
 
-function Raw = addAmbientToAllRacks(Raw, ambient_temp)
-    % Add ambient temperature to all racks in Raw structure
+function Raw = addPLCTempsToAllRacks(Raw, plc_temp_data)
+    % Add PLC temperatures to all racks in Raw structure
     % Synchronize PLC time with Raw time (RBMS time)
     
     % Get all rack fields
@@ -330,24 +341,29 @@ function Raw = addAmbientToAllRacks(Raw, ambient_temp)
         % Get Raw time (RBMS time)
         raw_time = Raw.(rack_field).Time;
         
-        % Synchronize ambient temperature with Raw time
-        synced_ambient = syncAmbientWithRawTime(ambient_temp, raw_time);
+        % Synchronize temperatures with Raw time
+        [synced_ambient, synced_batt] = syncPLCTempsWithRawTime(plc_temp_data, raw_time);
         
-        % Add synchronized ambient temperature to this rack
+        % Add synchronized temperatures to this rack
         Raw.(rack_field).Ambient_Temperature = synced_ambient;
+        Raw.(rack_field).Battery_Temperature = synced_batt;
     end
 end
 
-function synced_ambient = syncAmbientWithRawTime(ambient_temp, raw_time)
-    % Synchronize PLC ambient temperature with Raw time
+function [synced_ambient, synced_batt] = syncPLCTempsWithRawTime(plc_temp_data, raw_time)
+    % Synchronize PLC temperatures with Raw time
     % Only use exact time matches, no interpolation - OPTIMIZED VERSION
     
+    % Initialize output arrays with NaN so they match raw_time length
+    synced_ambient = nan(length(raw_time), 1);
+    synced_batt = nan(length(raw_time), 1);
+    
     % Extract PLC time and temperature
-    if istable(ambient_temp) && height(ambient_temp) > 0
-        plc_time = ambient_temp.Time;
-        plc_temp = ambient_temp.Ambient_Temperature;
+    if istable(plc_temp_data) && height(plc_temp_data) > 0
+        plc_time = plc_temp_data.Time;
+        plc_ambient = plc_temp_data.Ambient_Temperature;
+        plc_batt = plc_temp_data.Battery_Temperature;
     else
-        synced_ambient = [];
         return;
     end
     
@@ -369,18 +385,15 @@ function synced_ambient = syncAmbientWithRawTime(ambient_temp, raw_time)
     % OPTIMIZATION: Use ismember for O(n+m) instead of O(n×m)
     [~, matched_indices] = ismember(raw_time, plc_time);
     
-    % Pre-allocate arrays
+    % Process matches
     valid_matches = matched_indices > 0;
     num_matches = sum(valid_matches);
     
-    if num_matches == 0
-        synced_ambient = [];
-        return;
+    if num_matches > 0
+        % Vectorized assignment to the correct positions matching raw_time
+        match_idx = matched_indices(valid_matches);
+        synced_ambient(valid_matches) = plc_ambient(match_idx);
+        synced_batt(valid_matches) = plc_batt(match_idx);
     end
-    
-    % Vectorized extraction
-    matched_temps = plc_temp(matched_indices(valid_matches));
-    
-    % Return as double array (matching ver04 format)
-    synced_ambient = matched_temps;
 end
+    
